@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; 
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
-import {login,register} from '../../services/auth.service';
+import {login,register,thirdParty} from '../../services/auth.service';
 
 import './Login.css';
 
@@ -28,6 +28,9 @@ export class Login extends Component {
           auth: true,
           name: response.name,
           picture: response.picture.data.url
+      });
+      thirdParty(response.id).then( data =>{
+        console.log(data)
       });
     }
   }
