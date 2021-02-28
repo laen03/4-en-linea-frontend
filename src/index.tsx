@@ -4,13 +4,15 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import {
-  Login
+  Login, 
+  NotFound
 } from './views/index'
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Route path="/" exact component={Login} />
+      <Route path="*" component={NotFound}/>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

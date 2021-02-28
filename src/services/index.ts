@@ -1,6 +1,7 @@
-import {AuthService} from './auth.service'
+import {login,register} from './auth.service'
 
 
 export{
-    AuthService
+    login,
+    register
 }

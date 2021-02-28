@@ -1,24 +1,24 @@
 import React, { Component } from 'react'; 
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
-import {AuthService} from '../../services/auth.service';
+import {login,register} from '../../services/auth.service';
 
 import './Login.css';
 
-const responseGoogle = (response:any)=>{
-  console.log(response);
-  console.log(response.profileObj);
-}
 
 export class Login extends Component {
 
-  constructor(props:any,private authService:AuthService){
+  constructor(props:any){
     super(props);
-    this.authService = new AuthService();
   }
 
   loginFacebook = () =>{
     console.log('Facebook btn clicked');
+  }
+
+  responseGoogle = ( response:any)=>{
+    console.log(response);
+    console.log(response.profileObj);
   }
 
   responseFacebook= (response:any) => {
@@ -29,11 +29,10 @@ export class Login extends Component {
           name: response.name,
           picture: response.picture.data.url
       });
-      this.authService.login({}).then( result =>{
-        console.log(result)
-      },error=> console.error(error));
     }
   }
+
+  
 
   render(){
     return (
@@ -53,8 +52,8 @@ export class Login extends Component {
             clientId="458119816447-ccej9rk4dflmdtjgf3ftds65knufin2s.apps.googleusercontent.com"
             buttonText="Google"
             className = "rounded-lg d-block d-grid gap-2 col-6 mx-auto w-25" 
-            onSuccess={responseGoogle}
-            onFailure={responseGoogle}
+            onSuccess={this.responseGoogle}
+            onFailure={this.responseGoogle}
             cookiePolicy={'single_host_origin'}/>
         </div>
       </div>
