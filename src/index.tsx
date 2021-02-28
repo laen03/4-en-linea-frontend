@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import {
-  //App,
   Login
 } from './views/index'
 

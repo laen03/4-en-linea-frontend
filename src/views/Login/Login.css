@@ -12,6 +12,12 @@
     height: 80vh;
 }
 
+.buttonLoginFacebook{
+    width: "500";
+    height: "300";
+    background-color: #21D4FD;
+}
+
 @media screen and (max-width: 768px){
     
 .login{
