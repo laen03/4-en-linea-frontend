@@ -1,5 +1,5 @@
-//import {LoginFacebook} from './LoginFacebbok/LoginFacebook';
+//import {PrivateRoute} from './PrivateRoute';
 
 export{
-    //LoginFacebook
+   
 }

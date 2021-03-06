@@ -9,7 +9,12 @@
     top: 50%;
     left: 50%;
     width: 400px;
-    height: 80vh;
+    height: fit-content;
+}
+
+.login-text{
+    font-family: calibri;
+    font-weight: 600;
 }
 
 .buttonLoginFacebook{
