@@ -19,6 +19,7 @@ export class Register extends Component {
             email: '',
             username: '',
             password: '',
+            passwordConfirmed: '',
             redirect: false,
             register: false
         };
@@ -28,9 +29,15 @@ export class Register extends Component {
 
     private onSubmitForm = (event: any) => {
         event.preventDefault();
-        this.setState({ login: true });
-        toast.info("Registrando", { position: 'bottom-right', autoClose: 1500, pauseOnHover: false, draggable: false });
-        //this.login();
+        if(this.state.password == this.state.passwordConfirmed){
+            this.setState({ login: true });
+        toast.info("Registrando", {position: 'bottom-right', autoClose: 1500, pauseOnHover: false, draggable: false});
+        register({email:this.state.email, username:this.state.username, password:this.state.password}).then(resulte=>{
+            console.log(resulte);
+        })
+        }else{
+            toast.info("Contraseñas diferentes", {position: 'bottom-right', autoClose: 1500, pauseOnHover: false, draggable: false});
+        }
     }
 
     private formChange(event: any) {
@@ -84,8 +91,8 @@ export class Register extends Component {
                             <div className="row mt-2">
                                 <div className="col-12">
                                     <label>Confirmar contraseña</label>
-                                    <input required name="password" type="password" value={this.state.password} onChange={this.formChange} className="form-control" />
-                                    {this.validator.message('password', this.state.password, 'required|min:8|max:20', { className: 'text-danger' })}
+                                    <input required name="passwordConfirmed" type="password" value={this.state.passwordConfirmed} onChange={this.formChange} className="form-control" />
+                                    {this.validator.message('passwordConfirmed', this.state.passwordConfirmed, 'required|min:8|max:20', { className: 'text-danger' })}
                                 </div>
                             </div>
                             <div className="row mt-2">

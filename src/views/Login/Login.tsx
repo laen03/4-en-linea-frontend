@@ -7,12 +7,12 @@ import { login, facebook,google } from '../../services/auth.service';
 import { ToastContainer, toast } from 'react-toastify';
 
 import './Login.css';
+
 export class Login extends Component {
 
   private validator: SimpleReactValidator;
   state:any;
   delta: any;
-
 
   constructor(props: any) {
     super(props);
@@ -138,7 +138,7 @@ export class Login extends Component {
             </div>
             <div className="row mt-2 mb-5">
                 <div className="col-12">
-                  <NavLink className="text-center w-100 d-block" to="/Register">¿No tienes una cuenta?</NavLink>
+                  <NavLink className="text-center w-100 d-block" to="/register">¿No tienes una cuenta?</NavLink>
                 </div>
             </div>
           </div>
