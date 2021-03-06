@@ -1,7 +1,9 @@
-import {login,register} from './auth.service'
+import {login,register,getAuthUser,logout} from './auth.service'
 
 
 export{
     login,
-    register
+    register,
+    getAuthUser,
+    logout
 }
