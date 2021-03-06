@@ -1,5 +1,5 @@
-//import {PrivateRoute} from './PrivateRoute';
+import {Board} from './Board/Board.component';
 
 export{
-   
+    Board
 }
