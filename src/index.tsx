@@ -7,7 +7,8 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-d
 import {
   DashboardNavigator,
   Login, 
-  NotFound
+  NotFound,
+  Register
 } from './views/index'
 
 ReactDOM.render(
@@ -15,6 +16,8 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route path="/" exact component={Login} />
+
+        <Route path="/Register" exact component={Register} />
         
         <Route path="/dashboard" render={({ location }) =>
                 true ? (
