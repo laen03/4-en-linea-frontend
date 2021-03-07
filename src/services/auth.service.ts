@@ -17,6 +17,13 @@ export function login(params:any){
     }).catch( err => handlerError(err));
 }
 
+export function getAuthUser():User|null{
+    const data = localStorage.getItem(USER_ID);
+    if(data){
+        return JSON.parse(data);
+    }
+    return null;
+}
 export function logout(){
     logoutUser();
     return true;
