@@ -4,12 +4,10 @@ import { NLineRule,Rule } from 'components/Board/rules';
 import { Board } from '../../components';
 import { getAuthUser } from '../../services'
 
-import style from './Dashboard.module.css';
-export class Dashboard extends Component {
+import style from './GameRoom.module.css';
+export class GameRoom extends Component {
 
   public state:any;
-
-
 
   constructor(props:any){
     super(props);
@@ -23,9 +21,11 @@ export class Dashboard extends Component {
 
   
   render(){
+    var rule = new NLineRule();
     return (
       <div>
-        Dashboard works!
+        {this.state.user == null? (""):(<Board gameRule={rule} size={5} ghost={true} player2Color='#00ff00' player={{id:this.state.user.data.id, color:''}} />) }
+      
       </div>
       
     );

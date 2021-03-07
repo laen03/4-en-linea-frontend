@@ -4,11 +4,13 @@ import {NotFound} from './NotFound/NotFound';
 import {DashboardNavigator} from './DashboardNavigator/DashboardNavigator';
 import {Dashboard} from './Dashboard/Dashboard';
 import {Register} from './Register/Register';
+import {GameRoom} from './GameRoom/GameRoom';
 
 export{
    NotFound,
    DashboardNavigator,
    Dashboard,
    Login,
-   Register
+   Register,
+   GameRoom
 }

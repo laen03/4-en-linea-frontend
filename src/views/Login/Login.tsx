@@ -6,7 +6,7 @@ import SimpleReactValidator from 'simple-react-validator';
 import { login, facebook,google } from '../../services/auth.service';
 import { ToastContainer, toast } from 'react-toastify';
 
-import './Login.css';
+import styles from './Login.module.css';
 
 export class Login extends Component {
 
@@ -82,14 +82,14 @@ export class Login extends Component {
 
   render() {
     return (
-      <div className="background">
+      <div className={styles.background}>
         {this.renderRedirect()}
         <ToastContainer />
-        <div className="login bg-white rounded-lg d-block position-absolute">
+        <div className={`bg-white rounded-lg d-block position-absolute ${styles.login}`}>
           <div className="container-fluid">
             <div className="row mt-2">
               <div className="col-12">
-                <h1 className="text-center w-100 login-text">Entrar</h1>
+                <h1 className={`text-center w-100 ${styles.loginText}`}>Entrar</h1>
               </div>
             </div>
             <form onSubmit={this.onSubmitForm}>

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router';
-import { Dashboard } from 'views';
-
-
-
-import './DashboardNavigator.css';
+import { Route, Switch } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import { Dashboard,GameRoom } from 'views';
+import logo from './dashboardIcon.png';
+import style from './DashboardNavigator.module.css';
 export class DashboardNavigator extends Component {
 
   private path: string = '/dashboard';
@@ -19,16 +18,16 @@ export class DashboardNavigator extends Component {
       <div>
         <nav className='navbar navbar-dark bg-dark'>
           <div className="container-fluid">
-            <a className="navbar-brand" href="#">
-              <img src="/src/views/Dashboard/dashboardIcon.png" alt="" width="30" height="24" className="d-inline-block align-top"></img>
+            <NavLink className="navbar-brand" to={this.path}>
+              <img src={logo} width="30" height="24" className="d-inline-block align-top"></img>
               N en línea
-            </a>
-            <a className="nav-link active" aria-current="page" href="#">Logout</a>
+            </NavLink>
+            <a className="nav-link active">Logout</a>
           </div>
         </nav>
         <Switch>
           <Route exact path={this.path} component={Dashboard} />
-          <Route exact path={this.path + '/play/online'} component={Dashboard} />
+          <Route exact path={this.path + '/play/online'} component={GameRoom} />
         </Switch>
       </div>
 

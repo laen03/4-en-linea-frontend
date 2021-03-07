@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { register } from '../../services/auth.service';
 
 
-import './Register.css';
+import style from './Register.module.css';
 
 export class Register extends Component {
     private validator: SimpleReactValidator;
@@ -31,10 +31,10 @@ export class Register extends Component {
         event.preventDefault();
         if(this.state.password == this.state.passwordConfirmed){
             this.setState({ login: true });
-        toast.info("Registrando", {position: 'bottom-right', autoClose: 1500, pauseOnHover: false, draggable: false});
-        register({email:this.state.email, username:this.state.username, password:this.state.password}).then(resulte=>{
-            console.log(resulte);
-        })
+            toast.info("Registrando", {position: 'bottom-right', autoClose: 1500, pauseOnHover: false, draggable: false});
+            register({email:this.state.email, username:this.state.username, password:this.state.password}).then(resulte=>{
+                console.log(resulte);
+            })
         }else{
             toast.info("Contraseñas diferentes", {position: 'bottom-right', autoClose: 1500, pauseOnHover: false, draggable: false});
         }
@@ -56,14 +56,14 @@ export class Register extends Component {
 
     render() {
         return (
-            <div className="background">
+            <div className={style.background}>
                 {this.renderRedirect()}
                 <ToastContainer />
-                <div className="login bg-white rounded-lg d-block position-absolute">
+                <div className={`bg-white rounded-lg d-block position-absolute ${style.register}`}>
                     <div className="container-fluid">
                         <div className="row mt-2">
                             <div className="col-12">
-                                <h1 className="text-center w-100 login-text">Regístrate</h1>
+                                <h1 className={`text-center w-100 ${style.registerText}`}>Regístrate</h1>
                             </div>
                         </div>
                         <form onSubmit={this.onSubmitForm}>
@@ -101,7 +101,11 @@ export class Register extends Component {
                                 </div>
                             </div>
                         </form>
-                        <div className="row mt-2 mb-5"></div>
+                        <div className="row mt-2 mb-3">
+                            <div className="col-12">
+                                <NavLink className="text-center w-100 d-block" to="/">¿Ya tienes una cuenta?</NavLink>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

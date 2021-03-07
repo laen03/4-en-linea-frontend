@@ -11,6 +11,8 @@ import {
   Register
 } from './views/index'
 
+import './style.css';
+
 ReactDOM.render(
   <React.StrictMode>
     <Router>
