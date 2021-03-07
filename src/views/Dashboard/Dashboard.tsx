@@ -8,9 +8,17 @@ export class Dashboard extends Component {
     super(props);
   }
 
+  //<Board size={3} ghost={true} player1={{id:1, color:''}} player2={{id:2, color:'#E62B3F'}} />
+  
   render(){
     return (
-      <Board size={3} ghost={true} player1={{id:1, color:''}} player2={{id:2, color:'#E62B3F'}} />
+      
+      <div className='background'>
+
+      </div>
     );
   }
+
+
+
 }
