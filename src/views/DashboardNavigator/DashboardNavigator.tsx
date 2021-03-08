@@ -15,14 +15,17 @@ export class DashboardNavigator extends Component {
 
   render() {
     return (
-      <div>
+      <div className={style.background}>
         <nav className='navbar navbar-dark bg-dark'>
           <div className="container-fluid">
             <NavLink className="navbar-brand" to={this.path}>
-              <img src={logo} width="30" height="24" className="d-inline-block align-top"></img>
-              N en línea
+              <img src={logo} width="30" height="30" className="d-inline-block align-top"></img>
+                N en línea
             </NavLink>
-            <a className="nav-link active">Logout</a>
+            <NavLink className="navbar-brand" to='/'>
+              <a className="nav-link active">Logout</a>
+            </NavLink>
+            
           </div>
         </nav>
         <Switch>

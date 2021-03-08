@@ -1,7 +1,18 @@
 
-/*
+.createRoom{
+    background-color: #BDE0FE;
+    border-color: #006D77;
+    transition: all 0.2s;
+}
+.createRoom:hover{
+    background-color: #283593;
+
+}
+
+
+/*06D6A0  BDE0FE
     estilos que se aplican si la resolucion de la pantalla es menor a 768px
 */
 @media screen and (max-width: 768px){
     
-}
+}  
