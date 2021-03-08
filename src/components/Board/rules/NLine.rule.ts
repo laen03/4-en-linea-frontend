@@ -4,7 +4,11 @@ import { Rule } from "./rule";
 
 export class NLineRule implements Rule{
 
-    constructor(){}
+    private socket:any;
+
+    constructor(socket:any){
+        this.socket = socket;
+    }
     
     public onEnter(board: Cell[][], cell:Cell, id:number): boolean {
         return false;
@@ -19,7 +23,10 @@ export class NLineRule implements Rule{
             const temp:Cell = board[i][y];
             if(temp.id ==0){
                 board[i][y].id = id;
-                // enviar al back las cordenadas X y Y mas ID 
+                this.socket.on("response", (data:any)=>{
+                    console.log(data);
+                });
+                this.socket.emit('hello', {id:id, x:i, y:y})
                 return true;
             }
         }      
