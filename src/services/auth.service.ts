@@ -76,7 +76,7 @@ function loginUser(data:any){
     localStorage.setItem(USER_ID,JSON.stringify(data))
 }
 
-function logoutUser(){
+export function logoutUser(){
     localStorage.removeItem(USER_ID);
     sessionStorage.clear();
 }

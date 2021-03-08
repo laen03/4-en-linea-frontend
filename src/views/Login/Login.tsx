@@ -86,7 +86,7 @@ export class Login extends Component {
         {this.renderRedirect()}
         <ToastContainer />
         <div className={`bg-white rounded-lg d-block position-absolute ${styles.login}`}>
-          <div className="container-fluid">
+          <div className="container-fluid"> 
             <div className="row mt-2">
               <div className="col-12">
                 <h1 className={`text-center w-100 ${styles.loginText}`}>Entrar</h1>
