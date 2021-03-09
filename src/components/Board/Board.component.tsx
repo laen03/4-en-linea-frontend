@@ -10,11 +10,6 @@ interface prop {
     gameRule:Rule
 }
 
-enum GameState {
-    Waiting,
-    Playing,
-    GameOver
-}
 interface state {
     board:Cell[][]
 }

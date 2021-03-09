@@ -22,8 +22,8 @@ export class DashboardNavigator extends Component {
               <img src={logo} width="30" height="30" className="d-inline-block align-top"></img>
                 N en línea
             </NavLink>
-            <NavLink className="navbar-brand" to='/'>
-              <a className="nav-link active">Logout</a>
+            <NavLink className="navbar-brandnav-link active" to='/'>
+            Logout
             </NavLink>
             
           </div>

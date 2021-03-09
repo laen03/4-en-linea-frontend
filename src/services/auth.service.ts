@@ -49,10 +49,11 @@ export function register(params:any){
     }).catch(err => handlerError(err));
 }
 
-export function facebook(id:string,access_token:string,email:string){
+export function facebook(id:string,access_token:string,email:string,picture:string){
     return http.post(`${URL}/facebook`,{oauth_uid:id,email:email,access_token:access_token}).then( data => {
         let user = data.data;
         if(user.success){
+            user.data.picture = picture;
             loginUser({data:user.data, access_token:user.access_token});
             return {success:true};
         }
@@ -60,10 +61,11 @@ export function facebook(id:string,access_token:string,email:string){
     }).catch( err => handlerError(err));;
 }
 
-export function google(id:string,access_token:string,email:string){
+export function google(id:string,access_token:string,email:string,picture:string){
     return http.post(`${URL}/google`,{oauth_uid:id,email:email,access_token:access_token}).then( data => {
         let user = data.data;
         if(user.success){
+            user.data.picture = picture;
             loginUser({data:user.data, access_token:user.access_token});
             return {success:true};
         }

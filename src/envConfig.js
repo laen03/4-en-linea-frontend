@@ -1,4 +1,4 @@
 var config = {
-    ApiUrl:"https://for-line.herokuapp.com"
+    ApiUrl:"http://localhost:8081"
 }
 module.exports = config;

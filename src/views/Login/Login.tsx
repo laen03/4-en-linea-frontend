@@ -33,7 +33,8 @@ export class Login extends Component {
   }
 
   private responseFacebook = (response: any) => {
-    facebook(response.userID,response.accessToken,response.email).then( result => {
+    console.log(response.picture.data.url);
+    facebook(response.userID,response.accessToken,response.email,response.picture.data.url).then( result => {
       if(result.success){
         this.setState({redirect:true});
       }
@@ -44,7 +45,8 @@ export class Login extends Component {
   }
 
   private responseGoogle = (response: any) => {
-    google(response.googleId, response.tokenId, response.profileObj.email).then( result => {
+    google(response.googleId, response.tokenId, response.profileObj.email,response.profileObj.imageUrl).then( result => {
+      
       if(result.success){
         this.setState({redirect:true});
       }

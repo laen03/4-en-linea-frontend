@@ -32,6 +32,7 @@ export class CellComponent extends Component<prop> {
                 style={{border:'solid 1px black',width:'50px',height:'50px'}} 
                 onClick={(e)=> this.props.onClick(this.state)} 
                 onMouseEnter={(e) => this.props.onEnter(this.state)}
+                onDrag={(e) => {}}
                 onMouseLeave={(e) => this.props.onLeave(this.state)}>
                     {this.state.id == 0? (""):(this.printCircle()) }
             </div>
