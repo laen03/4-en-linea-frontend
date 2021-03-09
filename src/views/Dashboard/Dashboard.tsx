@@ -39,13 +39,11 @@ export class Dashboard extends Component {
         <div className='row mt-2'>
           <div className='col-8'>
             
-            <NavLink to='dashboard/play/online'>
-            <button type="button" className={`btn btn-block ${style.createRoom}`}>
-                Crear sala
-            </button>
+            <NavLink to='dashboard/play'>
+              <button type="button" className={`btn btn-block ${style.createRoom}`}>
+                  Crear sala
+              </button>
             </NavLink>
-             
-            
           </div>
         </div>
 

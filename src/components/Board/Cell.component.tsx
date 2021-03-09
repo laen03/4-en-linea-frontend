@@ -24,6 +24,8 @@ export class CellComponent extends Component<prop> {
         );
     }
 
+    
+
     render() {
         return (
             <div 

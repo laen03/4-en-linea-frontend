@@ -30,7 +30,7 @@ export class DashboardNavigator extends Component {
         </nav>
         <Switch>
           <Route exact path={this.path} component={Dashboard} />
-          <Route exact path={this.path + '/play/online'} component={GameRoom} />
+          <Route exact path={this.path + '/play'} component={GameRoom} />
         </Switch>
       </div>
 

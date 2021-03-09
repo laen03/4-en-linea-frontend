@@ -8,29 +8,42 @@ export class NLineRule implements Rule{
 
     constructor(socket:any){
         this.socket = socket;
+        this.receiveData = this.receiveData.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
-    
-    public onEnter(board: Cell[][], cell:Cell, id:number): boolean {
+
+    public initRule(data:any):boolean{
+        this.socket.on('responseBoard', (response:any) => this.receiveData(response, data.updata))
+        return true;
+    }
+
+    public onEnter(board: Cell[][], cell:Cell, userId:number, updateFunction:any): boolean {
         return false;
     }
-    public onLeave(board: Cell[][], cell:Cell, id:number): boolean {
+    
+    public onLeave(board: Cell[][], cell:Cell, userId:number, updateFunction:any): boolean {
         return false;
     }
 
-    public onClick(board: Cell[][], cell:Cell, id:number): boolean {
+    public onClick(board: Cell[][], cell:Cell, userId:number, updateFunction:any): boolean {
         var y = cell.y;
         for(var i = board.length-1; i >= 0;i--){
             const temp:Cell = board[i][y];
             if(temp.id ==0){
-                board[i][y].id = id;
-                this.socket.on("response", (data:any)=>{
-                    console.log(data);
-                });
-                this.socket.emit('hello', {id:id, x:i, y:y})
+                this.sendData('boardMove',{id:userId,x:i,y:y});
+                updateFunction(i,y,userId);
                 return true;
             }
         }      
         return false;
+    }
+
+    public sendData(listener:string,data:any){
+        this.socket.emit(listener,data);
+    }
+
+    public receiveData(data:any,updateBoard:any){
+        updateBoard(data.x, data.y, data.id);
     }
 
 }
