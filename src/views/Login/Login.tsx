@@ -44,9 +44,13 @@ export class Login extends Component {
   }
 
   private responseGoogle = (response: any) => {
-    if (response.status !== 'unknown') {
-      console.log(response);
-    }
+    google(response.googleId, response.tokenId, response.profileObj.email).then( result => {
+      if(result.success){
+        this.setState({redirect:true});
+      }
+      toast.error("Credenciales Invalidas",{position:'bottom-right'});
+      this.setState({login:false});
+    },err => toast.error("Error Interno",{position:'bottom-right'}))
   }
 
   private onSubmitForm = (event:any) => {
