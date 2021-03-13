@@ -5,9 +5,11 @@ import { Rule } from "./rule";
 export class NLineRule implements Rule{
 
     private socket:any;
+    private isPlaying:boolean;
 
-    constructor(socket:any){
+    constructor(socket:any,isPlaying:boolean){
         this.socket = socket;
+        this.isPlaying = isPlaying;
         this.receiveData = this.receiveData.bind(this);
         this.onClick = this.onClick.bind(this);
     }
@@ -26,15 +28,18 @@ export class NLineRule implements Rule{
     }
 
     public onClick(board: Cell[][], cell:Cell, userId:number, updateFunction:any): boolean {
-        var y = cell.y;
-        for(var i = board.length-1; i >= 0;i--){
-            const temp:Cell = board[i][y];
-            if(temp.id ==0){
-                this.sendData('boardMove',{id:userId,x:i,y:y});
-                updateFunction(i,y,userId);
-                return true;
-            }
-        }      
+        if(this.isPlaying){
+            var y = cell.y;
+            this.isPlaying=false;
+            for(var i = board.length-1; i >= 0;i--){
+                const temp:Cell = board[i][y];
+                if(temp.id ==0){
+                    this.sendData('boardMove',{id:userId,x:i,y:y});
+                    updateFunction(i,y,userId);
+                    return true;
+                }
+            }      
+        }
         return false;
     }
 
@@ -43,6 +48,7 @@ export class NLineRule implements Rule{
     }
 
     public receiveData(data:any,updateBoard:any){
+        this.isPlaying = true;
         updateBoard(data.x, data.y, data.id);
     }
 

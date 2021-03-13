@@ -23,18 +23,26 @@ export class GameRoom extends Component {
 
   constructor(props:any){
     super(props);
-    this.state = {user:getAuthUser(), 
+
+    this.state = {
+      user:getAuthUser(), 
       socket:io(config.ApiUrl), 
-      roomState:RoomState.IDEL,player2:{}, 
+      roomState:RoomState.IDEL,
+      player2:{}, 
       colorPlayer1: '#F44E3B',
-      colorPlayer2: '#68BC00'};
+      colorPlayer2: '#68BC00'
+    };
+
     this.board = []
+
     this.state.socket.on('gameRoomInfo', (data:any)=> {
       console.log(data);
+  
       this.setState({
         roomState: RoomState.PLAYING,
         board: data.board,
-        player2: data.player
+        player2: data.player,
+        gamerule: new NLineRule(this.state.socket,data.isPlaying)
       });
 
       //this.forceUpdate();
@@ -98,7 +106,7 @@ export class GameRoom extends Component {
   }
 
   render(){
-    var rule = new NLineRule(this.state.socket);
+    
     return (
       <div className="container-fluid mt-2">
         <div className="row">
@@ -129,7 +137,7 @@ export class GameRoom extends Component {
                     {(this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING)? 
                       (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />):
                         (this.state.roomState == RoomState.PLAYING?
-                          (<Board gameRule={rule} board={this.state.board} player2={{id:this.state.player2.id, color:this.state.colorPlayer2}} player1={{id:this.state.user.data.id, color:this.state.colorPlayer1}} />) :
+                          (<Board gameRule={this.state.gamerule} board={this.state.board} player2={{id:this.state.player2.id, color:this.state.colorPlayer2}} player1={{id:this.state.user.data.id, color:this.state.colorPlayer1}} />) :
                           (''))}
                   </div>
                 </div>
