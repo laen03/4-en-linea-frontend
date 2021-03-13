@@ -6,6 +6,7 @@ interface prop {
     onClick: any,
     onEnter:any,
     onLeave:any
+    color:string
 }
 
 export class CellComponent extends Component<prop> {
@@ -20,11 +21,10 @@ export class CellComponent extends Component<prop> {
 
     private printCircle()  {
         return(
-            <div style={{width:'45px',height:'45px',backgroundColor:'red'}} className="rounded-circle"/>
+            <div style={{width:'45px',height:'45px',backgroundColor:this.props.color}} 
+            className="rounded-circle m-auto d-block"/>
         );
     }
-
-    
 
     render() {
         return (

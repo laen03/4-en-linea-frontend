@@ -5,8 +5,14 @@ import { Rule } from './rules';
 
 interface prop {
     board: Cell[][],
-    player1:number,
-    platter2:number,
+    player1:{
+        id:number,
+        color:string
+    },
+    player2:{
+        id:number,
+        color:string
+    },
     gameRule:Rule
 }
 
@@ -38,7 +44,7 @@ export class Board extends Component<prop> {
      * @param {Cell} cell datos de la celda en la que se dio click
      */
     private onClick = (cell:Cell):boolean => {
-        return this.props.gameRule.onClick(this.state.board, cell,this.props.player1,this.update)
+        return this.props.gameRule.onClick(this.state.board, cell,this.props.player1.id,this.update)
     };
 
     /**
@@ -46,7 +52,7 @@ export class Board extends Component<prop> {
      * @param {Cell} cell datos de la celda en la que el mouse salio
      */
     private onLeave = (cell:Cell):boolean => {
-        return this.props.gameRule.onLeave(this.state.board, cell,this.props.player1,this.update)
+        return this.props.gameRule.onLeave(this.state.board, cell,this.props.player1.id,this.update)
     };
 
     /**
@@ -54,8 +60,18 @@ export class Board extends Component<prop> {
      * @param {Cell} cell datos de la celda en la que el mouse esta
      */
     private onEnter = (cell:Cell):boolean => {
-        return this.props.gameRule.onEnter(this.state.board, cell,this.props.player1,this.update);
+        return this.props.gameRule.onEnter(this.state.board, cell,this.props.player1.id,this.update);
     };
+
+    private returnColor(id:number) {
+        if(id==this.props.player1.id){
+            return this.props.player1.color;
+        }
+        if(id==this.props.player2.id){
+            return this.props.player2.color;
+        }
+        return '';
+    }
 
     /**
      *  Esta funcion se encarga de renderizar el tablero
@@ -74,6 +90,7 @@ export class Board extends Component<prop> {
                                         onClick={this.onClick}
                                         onEnter={this.onEnter}
                                         onLeave={this.onLeave}
+                                        color={this.returnColor(singleCell.id)}
                                     />
                                 );
                             })}

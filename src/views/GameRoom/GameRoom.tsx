@@ -1,5 +1,7 @@
+import { CirclePicker } from 'react-color';
+import Tippy from '@tippyjs/react';
 import { Cell, User } from 'models';
-import { Component } from 'react';
+import { Component, useState } from 'react';
 import { NLineRule,Rule } from 'components/Board/rules';
 import { Board } from '../../components';
 import { getAuthUser } from '../../services'
@@ -21,7 +23,11 @@ export class GameRoom extends Component {
 
   constructor(props:any){
     super(props);
-    this.state = {user:getAuthUser(), socket:io(config.ApiUrl), roomState:RoomState.IDEL,player2:{}};
+    this.state = {user:getAuthUser(), 
+      socket:io(config.ApiUrl), 
+      roomState:RoomState.IDEL,player2:{}, 
+      colorPlayer1: '#F44E3B',
+      colorPlayer2: '#68BC00'};
     this.board = []
     this.state.socket.on('gameRoomInfo', (data:any)=> {
       console.log(data);
@@ -90,7 +96,7 @@ export class GameRoom extends Component {
     });
 
   }
-  
+
   render(){
     var rule = new NLineRule(this.state.socket);
     return (
@@ -120,13 +126,11 @@ export class GameRoom extends Component {
                 </div>
                 <div className="row mt-2">
                   <div className="col-12">
-                    { 
-                      (this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING)? 
-                        (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />):
+                    {(this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING)? 
+                      (<table><ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} /></table>):
                         (this.state.roomState == RoomState.PLAYING?
-                          (<Board gameRule={rule} board={this.state.board} platter2={this.state.player2.id} player1={this.state.user.data.id} />) :
-                          (''))
-                    }
+                          (<Board gameRule={rule} board={this.state.board} player2={{id:this.state.player2.id, color:this.state.colorPlayer2}} player1={{id:this.state.user.data.id, color:this.state.colorPlayer1}} />) :
+                          (''))}
                   </div>
                 </div>
               </div>
@@ -161,6 +165,22 @@ export class GameRoom extends Component {
                     <button disabled={this.state.roomState != RoomState.IDEL } className="btn btn-success btn-block" onClick={(e) => this.searchGameRoom()}>
                       Buscar Partida
                     </button>
+                  </div>
+                </div>
+                <div className="row mt-5">
+                  <div className="col-6">
+                    <h4 className='text-center'>Player1</h4>
+                    <CirclePicker className='center' width ='100%' colors={['#F44E3B', '#FE9200', '#FCDC00', '#A4DD00']}
+                    color={this.state.colorPlayer1}
+                    onChangeComplete={(color: { hex: any; }) => this.setState({colorPlayer1:color.hex})}
+                    />
+                  </div>  
+                    <div className="col-6">
+                    <h4 className='text-center'>Player2</h4>
+                    <CirclePicker className='center' width ='100%' colors={['#68BC00', '#009CE0', '#7B64FF', '#FA28FF']}
+                    color={this.state.colorPlayer2}
+                    onChangeComplete={(color: { hex: any; }) => this.setState({colorPlayer2:color.hex})}
+                    />
                   </div>
                 </div>
               </div>              

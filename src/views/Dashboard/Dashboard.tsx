@@ -11,8 +11,6 @@ export class Dashboard extends Component {
 
   public state: any;
 
-
-
   constructor(props: any) {
     super(props);
     this.state = { user: null };
