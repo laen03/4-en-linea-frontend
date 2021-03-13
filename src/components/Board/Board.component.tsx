@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { Cell } from '../../models';
 import { CellComponent } from './Cell.component';
 import { Rule } from './rules';
+import style from './Board.module.css';
 
 interface prop {
     board: Cell[][],
@@ -78,27 +79,28 @@ export class Board extends Component<prop> {
      */
     render() {
         return (
-            <table><div className="bg-white">
-                {this.state.board.map((row, inde) => {
-                    return (
-                        <div className="d-flex" key={inde}>
-                            {row.map((singleCell: Cell, index: number) => {
-                                return (
-                                    <CellComponent
-                                        key={index}
-                                        data={singleCell}
-                                        onClick={this.onClick}
-                                        onEnter={this.onEnter}
-                                        onLeave={this.onLeave}
-                                        color={this.returnColor(singleCell.id)}
-                                    />
-                                );
-                            })}
-                        </div>
-                    );
-                })}
+            <div className={style.table}>
+                <div className="bg-white">
+                    {this.state.board.map((row, inde) => {
+                        return (
+                            <div className="d-flex" key={inde}>
+                                {row.map((singleCell: Cell, index: number) => {
+                                    return (
+                                        <CellComponent
+                                            key={index}
+                                            data={singleCell}
+                                            onClick={this.onClick}
+                                            onEnter={this.onEnter}
+                                            onLeave={this.onLeave}
+                                            color={this.returnColor(singleCell.id)}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-            </table>
         );
     }
 }
