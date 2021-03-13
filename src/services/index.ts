@@ -1,9 +1,10 @@
-import {login,register,getAuthUser,logout} from './auth.service'
-
+import {login,register,getAuthUser,logout,} from './auth.service'
+import {getHistory} from './player.service'
 
 export{
     login,
     register,
     getAuthUser,
-    logout
+    logout,
+    getHistory
 }
