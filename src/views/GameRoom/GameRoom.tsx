@@ -127,7 +127,7 @@ export class GameRoom extends Component {
                 <div className="row mt-2">
                   <div className="col-12">
                     {(this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING)? 
-                      (<table><ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} /></table>):
+                      (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />):
                         (this.state.roomState == RoomState.PLAYING?
                           (<Board gameRule={rule} board={this.state.board} player2={{id:this.state.player2.id, color:this.state.colorPlayer2}} player1={{id:this.state.user.data.id, color:this.state.colorPlayer1}} />) :
                           (''))}

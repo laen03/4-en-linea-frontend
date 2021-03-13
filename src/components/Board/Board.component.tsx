@@ -78,7 +78,7 @@ export class Board extends Component<prop> {
      */
     render() {
         return (
-            <div className="bg-white">
+            <table><div className="bg-white">
                 {this.state.board.map((row, inde) => {
                     return (
                         <div className="d-flex" key={inde}>
@@ -98,6 +98,7 @@ export class Board extends Component<prop> {
                     );
                 })}
             </div>
+            </table>
         );
     }
 }
