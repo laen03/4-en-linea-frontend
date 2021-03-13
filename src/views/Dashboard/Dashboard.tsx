@@ -33,11 +33,10 @@ const paginationOptions = {
   selectAllRowsItemText: 'Todos'
 }
 
-
-
 export class Dashboard extends Component {
 
   public state: any;
+
 
   constructor(props: any) {
     super(props);
