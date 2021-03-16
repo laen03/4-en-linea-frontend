@@ -102,9 +102,5 @@ export class Dashboard extends Component {
         </div>
       </div>
     );
-
   }
-
-
-
 }

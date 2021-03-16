@@ -1,5 +1,4 @@
 import { CirclePicker } from 'react-color';
-import Tippy from '@tippyjs/react';
 import { Cell, User } from 'models';
 import { Component, useState } from 'react';
 import { NLineRule,Rule } from 'components/Board/rules';
@@ -30,7 +29,8 @@ export class GameRoom extends Component {
       roomState:RoomState.IDEL,
       player2:{}, 
       colorPlayer1: '#F44E3B',
-      colorPlayer2: '#68BC00'
+      colorPlayer2: '#68BC00',
+      seg:''
     };
 
     this.board = []
@@ -45,6 +45,7 @@ export class GameRoom extends Component {
         gamerule: new NLineRule(this.state.socket,data.isPlaying)
       });
 
+      this.cronometro();
       //this.forceUpdate();
     });
   }
@@ -102,7 +103,30 @@ export class GameRoom extends Component {
         this.setState({roomState:RoomState.SEARCHING});
       }
     });
+  }
 
+   cronometro(){
+    const modulo = require('proyecto-2c-crono');
+    const cont = new modulo.Descontador(15); 
+    var d = cont.start().subscribe(
+      (data: string) => {
+            this.setState({seg:this.separador(data)}); 
+            console.log(this.state.seg);
+            console.log(data);
+            if (data  === 'FINISH') {
+                d.unsubscribe();
+            }
+      }
+    );
+  }
+
+  separador(data1:string){
+    if(data1 === 'FINISH'){
+      return data1;
+    }
+    var seg = data1.split(':');
+    console.log(seg)
+    return seg[2];
   }
 
   render(){
@@ -122,7 +146,12 @@ export class GameRoom extends Component {
                     {this.state.roomState == RoomState.PLAYING? ( this.state.player2.username) : ('')}
                   </div>
                   <div className="col-12 col-md-2 text-center font-weight-bold">
-                    VS
+                    <div> 
+                      VS 
+                      </div>
+                    <div> 
+                    {this.state.seg}
+                    </div>
                   </div>
                   <div className="col-12  col-md-3 text-center">
                     {this.state.user.data.username}
