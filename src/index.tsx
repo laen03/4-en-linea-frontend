@@ -12,9 +12,11 @@ import {
 } from './views/index'
 
 import './style.css';
+import { ToastContainer } from 'react-toastify';
 
 ReactDOM.render(
   <React.StrictMode>
+    <ToastContainer position="top-right" newestOnTop autoClose={false} pauseOnFocusLoss={false} draggable={false} />
     <Router>
       <Switch>
         <Route path="/" exact component={Login} />
@@ -37,6 +39,7 @@ ReactDOM.render(
         <Route path="*" component={NotFound}/>
       </Switch>
     </Router>
+   
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -20,6 +20,12 @@ export class CellComponent extends Component<prop> {
     
 
     private printCircle()  {
+        if(this.props.data.ghost )
+            return(
+                <div style={{width:'45px',height:'45px',backgroundColor:this.props.color,opacity:0.5}} 
+                className="rounded-circle m-auto d-block"/>
+            );
+
         return(
             <div style={{width:'45px',height:'45px',backgroundColor:this.props.color}} 
             className="rounded-circle m-auto d-block"/>
@@ -34,7 +40,7 @@ export class CellComponent extends Component<prop> {
                 onMouseEnter={(e) => this.props.onEnter(this.state)}
                 onDrag={(e) => {}}
                 onMouseLeave={(e) => this.props.onLeave(this.state)}>
-                    {this.state.id == 0? (""):(this.printCircle()) }
+                    {this.printCircle()}
             </div>
         );
     }

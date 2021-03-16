@@ -1,10 +1,11 @@
+import { time } from 'node:console';
 import React, { Component } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import { NavLink, Redirect } from 'react-router-dom';
+import { infoToast,errorToast,successToast,deleteToast } from 'services';
 import SimpleReactValidator from 'simple-react-validator';
 import { login, facebook,google } from '../../services/auth.service';
-import { ToastContainer, toast } from 'react-toastify';
 
 import styles from './Login.module.css';
 
@@ -28,48 +29,53 @@ export class Login extends Component {
   }
 
   private onClickThirdParty(){
-    toast.info("Logueando",{position:'bottom-right',autoClose:1500,pauseOnHover: false,draggable: false});
     this.setState({login:true});
   }
 
   private responseFacebook = (response: any) => {
-    console.log(response.picture.data.url);
+    infoToast("Enviando");
     facebook(response.userID,response.accessToken,response.email,response.picture.data.url).then( result => {
       if(result.success){
+        successToast("Logueado");
         this.setState({redirect:true});
+        return;
       }
-      toast.error("Credenciales Invalidas",{position:'bottom-right'});
+      errorToast("Credenciales Invalidas");
       this.setState({login:false});
-    },err => toast.error("Error Interno",{position:'bottom-right'}))
+    },err => {errorToast("Error Interno")})
   
   }
 
   private responseGoogle = (response: any) => {
+    infoToast("Enviando");
     google(response.googleId, response.tokenId, response.profileObj.email,response.profileObj.imageUrl).then( result => {
-      
       if(result.success){
+        successToast("Logueado");
         this.setState({redirect:true});
+        return;
       }
-      toast.error("Credenciales Invalidas",{position:'bottom-right'});
+      errorToast("Credenciales Invalidas");
       this.setState({login:false});
-    },err => toast.error("Error Interno",{position:'bottom-right'}))
+    },err => {errorToast("Error Interno")})
   }
 
   private onSubmitForm = (event:any) => {
     event.preventDefault();
     this.setState({login:true});
-    toast.info("Logueando",{position:'bottom-right',autoClose:1500,pauseOnHover: false,draggable: false});
     this.login();
   }
 
   private login(){
+    infoToast("Enviando");
     login({email:this.state.email,password:this.state.password}).then( result =>{
       if(result.success){
+        successToast("Logueado");
         this.setState({redirect:true});
+        return;
       }
-      toast.error("Credenciales Invalidas",{position:'bottom-right'});
       this.setState({login:false});
-    },err => toast.error("Error Interno",{position:'bottom-right'}))
+      errorToast("Credenciales Invalidas");
+    },err => {errorToast("Error Interno")})
   }
 
   private formChange(event:any){
@@ -90,7 +96,6 @@ export class Login extends Component {
     return (
       <div className={styles.background}>
         {this.renderRedirect()}
-        <ToastContainer />
         <div className={`bg-white rounded-lg d-block position-absolute ${styles.login}`}>
           <div className="container-fluid"> 
             <div className="row mt-2">
@@ -119,6 +124,13 @@ export class Login extends Component {
                 </div>
               </div>
             </form>
+            <div className="row mt-2">
+                <div className="col-12">
+                  <div className="text-black-50 text-center">
+                    - o -
+                  </div>
+                </div>
+              </div>
             <div className="row mt-3">
               <div className="col-12">
                 <FacebookLogin

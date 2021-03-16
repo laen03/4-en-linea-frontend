@@ -10,20 +10,43 @@ export class NLineRule implements Rule{
     constructor(socket:any,isPlaying:boolean){
         this.socket = socket;
         this.isPlaying = isPlaying;
-        this.receiveData = this.receiveData.bind(this);
         this.onClick = this.onClick.bind(this);
     }
 
+    public getIsPlaying():boolean{
+        return this.isPlaying;
+    }
+
     public initRule(data:any):boolean{
-        this.socket.on('responseBoard', (response:any) => this.receiveData(response, data.updata))
+        this.socket.on('responseBoard', (response:any) => {
+            this.isPlaying = true;
+            data.updata(response.x, response.y, response.id);
+            data.startTimer();
+        });
         return true;
     }
 
     public onEnter(board: Cell[][], cell:Cell, userId:number, updateFunction:any): boolean {
+        var y = cell.y;
+        for(var i = board.length-1; i >= 0;i--){
+            const temp:Cell = board[i][y];
+            if(temp.id == 0 || temp.ghost){
+                updateFunction(i,y,userId,true);
+                return true;
+            }
+        }    
         return false;
     }
     
     public onLeave(board: Cell[][], cell:Cell, userId:number, updateFunction:any): boolean {
+        var y = cell.y;
+        for(var i = board.length-1; i >= 0;i--){
+            const temp:Cell = board[i][y];
+            if(temp.id == 0 || temp.ghost){
+                updateFunction(i,y,0,false);
+                return true;
+            }
+        }    
         return false;
     }
 
@@ -33,7 +56,7 @@ export class NLineRule implements Rule{
             this.isPlaying=false;
             for(var i = board.length-1; i >= 0;i--){
                 const temp:Cell = board[i][y];
-                if(temp.id ==0){
+                if(temp.id ==0 || temp.ghost){
                     this.sendData('boardMove',{id:userId,x:i,y:y});
                     updateFunction(i,y,userId);
                     return true;
@@ -45,11 +68,6 @@ export class NLineRule implements Rule{
 
     public sendData(listener:string,data:any){
         this.socket.emit(listener,data);
-    }
-
-    public receiveData(data:any,updateBoard:any){
-        this.isPlaying = true;
-        updateBoard(data.x, data.y, data.id);
     }
 
 }
