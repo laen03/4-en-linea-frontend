@@ -222,8 +222,8 @@ export class GameRoom extends Component {
                     <DropdownMenu>
                     <DropdownItem header>Elige el tamaño</DropdownItem>
                         <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
-                        <DropdownItem>8x8</DropdownItem>
-                        <DropdownItem>10x10</DropdownItem>
+                        <DropdownItem onClick={()=>this.sendBoardSize(8)}>8x8</DropdownItem>
+                        <DropdownItem onClick={()=>this.sendBoardSize(10)}>10x10</DropdownItem>
                     </DropdownMenu>
               </Dropdown>
                 </div>
