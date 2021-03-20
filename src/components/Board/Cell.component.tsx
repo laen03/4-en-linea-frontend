@@ -25,7 +25,12 @@ export class CellComponent extends Component<prop> {
                 <div style={{width:'45px',height:'45px',backgroundColor:this.props.color,opacity:0.5}} 
                 className="rounded-circle m-auto d-block"/>
             );
-
+        if(this.props.data.mark){
+            return(
+                <div style={{width:'45px',height:'45px',backgroundColor:'#000000'}} 
+                className="rounded-circle m-auto d-block"/>
+            );
+        }
         return(
             <div style={{width:'45px',height:'45px',backgroundColor:this.props.color}} 
             className="rounded-circle m-auto d-block"/>

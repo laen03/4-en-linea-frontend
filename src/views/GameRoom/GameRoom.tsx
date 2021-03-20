@@ -12,7 +12,7 @@ const io = require('socket.io-client');
 
 enum RoomState {
   IDEL,
-  SEARCHING,
+  FINISH,
   WAITING,
   PLAYING
 }
@@ -47,10 +47,14 @@ export class GameRoom extends Component {
         player2: data.player,
         gamerule: new NLineRule(this.state.socket, data.isPlaying)
       });
+      
       //this.forceUpdate();
     });
   }
 
+  /**
+   * Aqui manda una solicitud para crear una sala
+   */
   createGameRoom() {
     this.state.socket.emit("createGameRoom", {
       boardSize: this.state.selectedBoardSize,
@@ -68,6 +72,17 @@ export class GameRoom extends Component {
 
   }
 
+  /**
+   * Detecta cuando una sala acabo.
+   * @param data 
+   */
+  finishGameRoom = (data:any) =>{
+    this.setState({roomState: RoomState.FINISH})
+  }
+
+  /**
+   * Aqui se une a una sala de un jugador.
+   */
   joinGameRoom() {
     this.state.socket.emit("connectGameRoom", {
       code: this.state.code,
@@ -88,6 +103,9 @@ export class GameRoom extends Component {
     });
   }
 
+  /**
+   * Esta funcion se encarga de mandar la solicitud para encontrar partidas
+   */
   searchGameRoom() {
     console.log(this.state.user)
     this.state.socket.emit("searchGame", {
@@ -98,11 +116,13 @@ export class GameRoom extends Component {
         picture: this.state.user.data.picture
       }
     });
+    this.setState({roomState: RoomState.WAITING,board:null})
 
     this.state.socket.on('searchedGame', (data: any) => {
       if (data.searching) {
-        this.setState({ roomState: RoomState.SEARCHING });
+        this.setState({ roomState: RoomState.WAITING });
       }
+
     });
   }
 
@@ -120,9 +140,9 @@ export class GameRoom extends Component {
         <div className="row">
           <div className="col-12 col-md-6">
             <h2 className="text-center">Tablero</h2>
-            {(this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING) ?
+            {(this.state.roomState == RoomState.WAITING) ?
               (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />) :
-              (this.state.roomState == RoomState.PLAYING ?
+              (this.state.roomState == RoomState.PLAYING || this.state.roomState == RoomState.FINISH?
                 (<Board
                   matchTime={15}
                   gameRule={this.state.gamerule}
@@ -131,14 +151,17 @@ export class GameRoom extends Component {
                     id: this.state.player2.id,
                     color: this.state.colorPlayer2,
                     picture: this.state.player2.picture,
-                    username: this.state.player2.username
+                    username: this.state.player2.username,
+                    win:false
                   }}
                   player1={{
                     id: this.state.user.data.id,
                     color: this.state.colorPlayer1,
                     picture: this.state.user.data.picture,
-                    username: this.state.user.data.username
+                    username: this.state.user.data.username,
+                    win:false
                   }}
+                  onFinish={this.finishGameRoom}
                 />) :
                 (''))}
           </div>
@@ -150,7 +173,7 @@ export class GameRoom extends Component {
                   <label><strong>Codigo:</strong> {this.state.ownCode}</label>
                 </div>
                 <div className="col-12 col-md-7">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-block btn-primary" onClick={(e) => this.createGameRoom()}>
+                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-block btn-primary" onClick={(e) => this.createGameRoom()}>
                     Crear Sala
                     </button>
                 </div>
@@ -160,14 +183,14 @@ export class GameRoom extends Component {
                   <input type="text" className="form-control" value={this.state.code} onChange={(e) => this.setState({ code: e.target.value })} placeholder="Codigo de sala" />
                 </div>
                 <div className="col-12 col-md-7">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-block btn-primary" onClick={(e) => this.joinGameRoom()}>
+                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-block btn-primary" onClick={(e) => this.joinGameRoom()}>
                     Unirse a Sala
                     </button>
                 </div>
               </div>
               <div className="row mt-5">
                 <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-success btn-block" onClick={(e) => this.searchGameRoom()}>
+                  <button disabled={ !(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-success btn-block" onClick={(e) => this.searchGameRoom()}>
                     Buscar Partida
                     </button>
                 </div>

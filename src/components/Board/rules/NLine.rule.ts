@@ -17,11 +17,16 @@ export class NLineRule implements Rule{
         return this.isPlaying;
     }
 
+
     public initRule(data:any):boolean{
         this.socket.on('responseBoard', (response:any) => {
             this.isPlaying = true;
             data.updata(response.x, response.y, response.id);
             data.startTimer();
+        });
+        this.socket.on("finishGameRoom",(response:any) => {
+            this.isPlaying = false;
+            data.onFinish(response)
         });
         return true;
     }

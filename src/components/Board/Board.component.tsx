@@ -11,16 +11,19 @@ interface prop {
         id: number,
         color: string,
         username: string,
-        picture: string
+        picture: string,
+        win:boolean
     },
     player2: {
         id: number,
         color: string,
         username: string,
-        picture: string
+        picture: string,
+        win:boolean
     },
     gameRule: Rule,
-    matchTime:number
+    matchTime:number,
+    onFinish:any
 }
 
 interface state {
@@ -45,7 +48,8 @@ export class Board extends Component<prop> {
 
         this.props.gameRule.initRule({
             updata: this.update,
-            startTimer:this.startTimer
+            startTimer:this.startTimer,
+            onFinish:this.onFinish
         });
     }
 
@@ -53,6 +57,22 @@ export class Board extends Component<prop> {
         this.state.board[x][y].id = id;
         this.state.board[x][y].ghost = ghost;
         this.forceUpdate();
+    }
+
+    public onFinish = (data:any) => {
+        console.log(data);
+        this.props.onFinish();
+        if(data.playerWinner == this.props.player1.id){
+            this.props.player1.win = true;
+        }
+        if(data.playerWinner == this.props.player2.id){
+            this.props.player2.win = true;
+        }
+        if(data.win == 1){
+            this.setState({board:data.board});
+        }
+        
+       // this.forceUpdate();
     }
 
     /**
@@ -120,24 +140,31 @@ export class Board extends Component<prop> {
         return (
             <div className="container-fluid">
                 <div className="row mt-2">
-                    <div className="col-12 col-md-2">
-                        <img className="d-block m-auto" src={this.props.player2.picture} />
-                    </div>
-                    <div className="col-12 col-md-3 text-center">
-                        {this.props.player2.username}
-                    </div>
+                    
+                        <div className="col-12 col-md-2">
+                            <img className="d-block m-auto" src={this.props.player2.picture} />
+                        </div>
+                        <div className="col-12 col-md-3 text-center">
+                            <div className={this.props.player2.win?style.winner:''}>
+                                {this.props.player2.username}
+                            </div>
+                        </div>
+                    
+                    
                     <div className="col-12 col-md-2 text-center font-weight-bold">
                         <div>VS</div>
                         <div>{this.state.timer}</div>
-                        
                     </div>
                     <div className="col-12  col-md-3 text-center">
-                        {this.props.player1.username}
+                        <div className={this.props.player1.win?style.winner:''}>
+                            {this.props.player1.username}
+                        </div>
+                        
                     </div>
                     <div className="col-12 col-md-2">
                         <img className="d-block m-auto" src={this.props.player1.picture} />
                     </div>
-
+                
                 </div>
                 <div className="row">
                     <div className="col-12">
