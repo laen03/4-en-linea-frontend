@@ -5,6 +5,8 @@ import { getAuthUser, getHistory } from '../../services'
 import style from './Dashboard.module.css';
 import defaultProfilePic from './defaultPic.jpg';
 
+
+
 import DataTable from 'react-data-table-component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -23,6 +25,7 @@ const paginationOptions = {
   selectAllRowsItemText: 'Todos'
 }
 
+
 export class Dashboard extends Component {
 
   public state: any;
@@ -32,6 +35,7 @@ export class Dashboard extends Component {
     super(props);
     this.state = { user: getAuthUser(), historyTable: [] };
   }
+
 
   private getHistory(){
     getHistory({size:20,page_number:0, id_user_account: this.state.user.data.id}).then( result =>{
@@ -75,7 +79,7 @@ export class Dashboard extends Component {
 
         <div className='row mt-4'>
           <div className='col-6'>
-            <NavLink to='dashboard/play'>
+          <NavLink to='dashboard/play'>
               <button type="button" className={`btn btn-block ${style.createRoom}`}>
                 Jugar en línea
               </button>

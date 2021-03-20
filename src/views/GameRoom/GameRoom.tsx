@@ -7,6 +7,7 @@ import { getAuthUser } from '../../services'
 import config from '../../envConfig';
 import style from './GameRoom.module.css';
 import ReactLoading from 'react-loading';
+import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap'
 const io = require('socket.io-client');
 
 enum RoomState {
@@ -30,7 +31,9 @@ export class GameRoom extends Component {
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
-      seg:''
+      seg:'', 
+      dropdown: false, //para el select del tamaño del tablero,
+      selectedBoardSize: 8
     };
 
     this.board = []
@@ -50,7 +53,7 @@ export class GameRoom extends Component {
 
   createGameRoom() {
     this.state.socket.emit("createGameRoom", {
-      boardSize: 8,
+      boardSize: this.state.selectedBoardSize,
       playerInfo: {
         id: this.state.user.data.id,
         username: this.state.user.data.username,
@@ -88,7 +91,7 @@ export class GameRoom extends Component {
   searchGameRoom() {
     console.log(this.state.user)
     this.state.socket.emit("searchGame", {
-      boardSize: 8,
+      boardSize: this.state.selectedBoardSize,
       playerInfo: {
         id: this.state.user.data.id,
         username: this.state.user.data.username,
@@ -102,6 +105,14 @@ export class GameRoom extends Component {
       }
     });
   }
+
+  private openCloseDropdown=()=>{
+    this.setState({dropdown:!this.state.dropdown});
+}
+
+  sendBoardSize(size: number) {
+    this.setState({selectedBoardSize: size});
+}
 
   render() {
     return (
@@ -175,6 +186,23 @@ export class GameRoom extends Component {
                     color={this.state.colorPlayer2}
                     onChangeComplete={(color: { hex: any; }) => this.setState({ colorPlayer2: color.hex })}
                   />
+                </div>
+              </div>
+              <div className='row mt-5'>
+                <div className='col-3'></div>
+                <div className='col-6'>
+                  <Dropdown isOpen={this.state.dropdown} toggle={this.openCloseDropdown} direction='right'>
+                    <DropdownToggle caret>
+                      Tamaño del tablero
+                    </DropdownToggle>
+
+                    <DropdownMenu>
+                    <DropdownItem header>Elige el tamaño</DropdownItem>
+                        <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
+                        <DropdownItem>8x8</DropdownItem>
+                        <DropdownItem>10x10</DropdownItem>
+                    </DropdownMenu>
+              </Dropdown>
                 </div>
               </div>
             </div>

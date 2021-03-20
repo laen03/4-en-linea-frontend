@@ -30,6 +30,7 @@
     "react-scripts": "4.0.3",
     "react-stopwatch": "^2.0.4",
     "react-toastify": "^7.0.3",
+    "reactstrap": "^8.9.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "simple-react-validator": "^1.6.0",
