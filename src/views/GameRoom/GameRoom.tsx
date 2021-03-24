@@ -134,6 +134,10 @@ export class GameRoom extends Component {
     this.setState({selectedBoardSize: size});
   }
 
+  pauseGame(){
+    console.log("Still working on it...")
+  }
+
   render() {
     return (
       <div className="container mt-2 bg-white">
@@ -168,7 +172,24 @@ export class GameRoom extends Component {
           <div className="col-12 col-md-6">
             <h2 className="text-center">Jugar</h2>
             <div className={`container-fluid mb-3 ${style.gameRoom}`}>
-              <div className="row mt-2">
+              <div className='row mt-4'>
+                  <div className='col-3'></div>
+                  <div className='col-6'>
+                    <Dropdown isOpen={this.state.dropdown} toggle={this.openCloseDropdown} direction='right'>
+                      <DropdownToggle caret>
+                        Tamaño del tablero
+                      </DropdownToggle>
+
+                      <DropdownMenu>
+                      <DropdownItem header>Elige el tamaño</DropdownItem>
+                          <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
+                          <DropdownItem onClick={()=>this.sendBoardSize(8)}>8x8</DropdownItem>
+                          <DropdownItem onClick={()=>this.sendBoardSize(10)}>10x10</DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </div>
+              </div>
+              <div className="row mt-3">
                 <div className="col-12 col-md-5">
                   <label><strong>Codigo:</strong> {this.state.ownCode}</label>
                 </div>
@@ -211,22 +232,14 @@ export class GameRoom extends Component {
                   />
                 </div>
               </div>
-              <div className='row mt-5'>
-                <div className='col-3'></div>
-                <div className='col-6'>
-                  <Dropdown isOpen={this.state.dropdown} toggle={this.openCloseDropdown} direction='right'>
-                    <DropdownToggle caret>
-                      Tamaño del tablero
-                    </DropdownToggle>
-
-                    <DropdownMenu>
-                    <DropdownItem header>Elige el tamaño</DropdownItem>
-                        <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
-                        <DropdownItem onClick={()=>this.sendBoardSize(8)}>8x8</DropdownItem>
-                        <DropdownItem onClick={()=>this.sendBoardSize(10)}>10x10</DropdownItem>
-                    </DropdownMenu>
-              </Dropdown>
+              <div className="row mt-5">
+                <div className="col-1"></div>
+                <div className="col-10">
+                  <button className="btn btn-warning btn-block" onClick={(e) => this.searchGameRoom()}>
+                    Pausar partida
+                  </button>
                 </div>
+                <div className="col-1"></div>
               </div>
             </div>
           </div>
