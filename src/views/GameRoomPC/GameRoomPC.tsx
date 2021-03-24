@@ -5,18 +5,19 @@ import { NLineRule, Rule } from 'components/Board/rules';
 import { Board } from '../../components';
 import { getAuthUser } from '../../services'
 import config from '../../envConfig';
-import style from './GameRoom.module.css';
+import style from './GameRoomPC.module.css';
 import ReactLoading from 'react-loading';
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap'
+import defaultProfilePic from '../../views/defaultPic.jpg';
+import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap';
 const io = require('socket.io-client');
 
 enum RoomState {
   IDEL,
-  FINISH,
+  SEARCHING,
   WAITING,
   PLAYING
 }
-export class GameRoom extends Component {
+export class GameRoomPC extends Component {
 
   public state: any;
   private board: Cell[][];
@@ -31,7 +32,8 @@ export class GameRoom extends Component {
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
-      seg:'', 
+      seg:'',
+      nivel: 1,
       dropdown: false, //para el select del tamaño del tablero,
       selectedBoardSize: 8
     };
@@ -47,17 +49,23 @@ export class GameRoom extends Component {
         player2: data.player,
         gamerule: new NLineRule(this.state.socket, data.isPlaying)
       });
-      
       //this.forceUpdate();
     });
   }
 
-  /**
-   * Aqui manda una solicitud para crear una sala
+    /**
+   * Detecta cuando una sala acabo.
+   * @param data 
    */
+    finishGameRoom = (data:any) =>{
+
+    }
+
   createGameRoom() {
     this.state.socket.emit("createGameRoom", {
       boardSize: this.state.selectedBoardSize,
+      bot: true, 
+      nivel: this.state.nivel,
       playerInfo: {
         id: this.state.user.data.id,
         username: this.state.user.data.username,
@@ -65,69 +73,13 @@ export class GameRoom extends Component {
         code: ''
       }
     })
-
     this.state.socket.on('createdGameRoom', (data: any) => {
       this.setState({ ownCode: data, roomState: RoomState.WAITING })
-    });
-
-  }
-
-  /**
-   * Detecta cuando una sala acabo.
-   * @param data 
-   */
-  finishGameRoom = (data:any) =>{
-    this.setState({roomState: RoomState.FINISH})
-  }
-
-  /**
-   * Aqui se une a una sala de un jugador.
-   */
-  joinGameRoom() {
-    this.state.socket.emit("connectGameRoom", {
-      code: this.state.code,
-      playerInfo: {
-        id: this.state.user.data.id,
-        username: this.state.user.data.username,
-        picture: this.state.user.data.picture
-      }
-    })
-
-    this.state.socket.on('connectedGameRoom', (data: any) => {
-      if (!data) {
-        console.log("not Connected");
-        this.setState({ roomState: RoomState.IDEL });
-        return;
-      }
-      console.log("conected");
-    });
-  }
-
-  /**
-   * Esta funcion se encarga de mandar la solicitud para encontrar partidas
-   */
-  searchGameRoom() {
-    console.log(this.state.user)
-    this.state.socket.emit("searchGame", {
-      boardSize: this.state.selectedBoardSize,
-      playerInfo: {
-        id: this.state.user.data.id,
-        username: this.state.user.data.username,
-        picture: this.state.user.data.picture
-      }
-    });
-    this.setState({roomState: RoomState.WAITING,board:null})
-
-    this.state.socket.on('searchedGame', (data: any) => {
-      if (data.searching) {
-        this.setState({ roomState: RoomState.WAITING });
-      }
-
     });
   }
 
   private openCloseDropdown=()=>{
-      this.setState({dropdown:!this.state.dropdown});
+    this.setState({dropdown:!this.state.dropdown});
   }
 
   sendBoardSize(size: number) {
@@ -140,18 +92,18 @@ export class GameRoom extends Component {
         <div className="row">
           <div className="col-12 col-md-6">
             <h2 className="text-center">Tablero</h2>
-            {(this.state.roomState == RoomState.WAITING) ?
+            {(this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING) ?
               (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />) :
-              (this.state.roomState == RoomState.PLAYING || this.state.roomState == RoomState.FINISH?
+              (this.state.roomState == RoomState.PLAYING ?
                 (<Board
                   matchTime={15}
                   gameRule={this.state.gamerule}
                   board={this.state.board}
                   player2={{
-                    id: this.state.player2.id,
+                    id: -1,
                     color: this.state.colorPlayer2,
-                    picture: this.state.player2.picture,
-                    username: this.state.player2.username,
+                    picture: defaultProfilePic,
+                    username: 'BAD BOT',
                     win:false
                   }}
                   player1={{
@@ -168,33 +120,27 @@ export class GameRoom extends Component {
           <div className="col-12 col-md-6">
             <h2 className="text-center">Jugar</h2>
             <div className={`container-fluid mb-3 ${style.gameRoom}`}>
-              <div className="row mt-2">
-                <div className="col-12 col-md-5">
-                  <label><strong>Codigo:</strong> {this.state.ownCode}</label>
-                </div>
-                <div className="col-12 col-md-7">
-                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-block btn-primary" onClick={(e) => this.createGameRoom()}>
-                    Crear Sala
+            <div className="row mt-5">
+              <div className="col-12">
+                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-success btn-block" onClick={(e) => this.createGameRoom()}>
+                      Nivel 1
                     </button>
                 </div>
               </div>
-              <div className="row mt-3">
-                <div className="col-12 col-md-5">
-                  <input type="text" className="form-control" value={this.state.code} onChange={(e) => this.setState({ code: e.target.value })} placeholder="Codigo de sala" />
+                <div className="row mt-5">
+                  <div className="col-12">
+                    <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-success btn-block" onClick={(e) => this.createGameRoom()}>
+                        Nivel 2
+                      </button>
+                  </div>
                 </div>
-                <div className="col-12 col-md-7">
-                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-block btn-primary" onClick={(e) => this.joinGameRoom()}>
-                    Unirse a Sala
-                    </button>
+                <div className="row mt-5">
+                  <div className="col-12">
+                    <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-success btn-block" onClick={(e) => this.createGameRoom()}>
+                        Nivel 3
+                      </button>
+                  </div>
                 </div>
-              </div>
-              <div className="row mt-5">
-                <div className="col-12">
-                  <button disabled={ !(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-success btn-block" onClick={(e) => this.searchGameRoom()}>
-                    Buscar Partida
-                    </button>
-                </div>
-              </div>
               <div className="row mt-5">
                 <div className="col-6">
                   <h4 className='text-center'>Player1</h4>
@@ -214,28 +160,24 @@ export class GameRoom extends Component {
               <div className='row mt-5'>
                 <div className='col-3'></div>
                 <div className='col-6'>
-                  <Dropdown isOpen={this.state.dropdown} toggle={this.openCloseDropdown} direction='right'>
-                    <DropdownToggle caret>
-                      Tamaño del tablero
-                    </DropdownToggle>
+                    <Dropdown isOpen={this.state.dropdown} toggle={this.openCloseDropdown} direction='right'>
+                      <DropdownToggle caret>
+                        Tamaño del tablero
+                      </DropdownToggle>
 
-                    <DropdownMenu>
-                    <DropdownItem header>Elige el tamaño</DropdownItem>
-                        <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
-                        <DropdownItem onClick={()=>this.sendBoardSize(8)}>8x8</DropdownItem>
-                        <DropdownItem onClick={()=>this.sendBoardSize(10)}>10x10</DropdownItem>
-                    </DropdownMenu>
-              </Dropdown>
+                      <DropdownMenu>
+                        <DropdownItem header>Elige el tamaño</DropdownItem>
+                            <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
+                            <DropdownItem onClick={()=>this.sendBoardSize(8)}>8x8</DropdownItem>
+                            <DropdownItem onClick={()=>this.sendBoardSize(10)}>10x10</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     );
   }
-
-
-
 }

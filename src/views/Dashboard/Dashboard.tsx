@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { getAuthUser, getHistory } from '../../services'
 
 import style from './Dashboard.module.css';
-import defaultProfilePic from './defaultPic.jpg';
+import defaultProfilePic from '../../views/defaultPic.jpg';
 
 
 
@@ -86,9 +86,11 @@ export class Dashboard extends Component {
             </NavLink>
           </div>
           <div className='col-6'>
-            <button type="button" className={`btn btn-block ${style.createRoom}`}>
-              Jugar con el ordenador
-            </button>
+            <NavLink to='dashboard/playPC'>
+              <button type="button" className={`btn btn-block ${style.createRoom}`}>
+                Jugar con el ordenador
+              </button>
+            </NavLink>
           </div>
         </div>
 

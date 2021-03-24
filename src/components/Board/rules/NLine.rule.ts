@@ -20,6 +20,7 @@ export class NLineRule implements Rule{
 
     public initRule(data:any):boolean{
         this.socket.on('responseBoard', (response:any) => {
+            console.log(response)
             this.isPlaying = true;
             data.updata(response.x, response.y, response.id);
             data.startTimer();
@@ -61,7 +62,7 @@ export class NLineRule implements Rule{
             this.isPlaying=false;
             for(var i = board.length-1; i >= 0;i--){
                 const temp:Cell = board[i][y];
-                if(temp.id ==0 || temp.ghost){
+                if(temp.id == 0 || temp.ghost){
                     this.sendData('boardMove',{id:userId,x:i,y:y});
                     updateFunction(i,y,userId);
                     return true;

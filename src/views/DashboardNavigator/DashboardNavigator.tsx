@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { NavLink } from 'react-router-dom';
-import { Dashboard,GameRoom } from 'views';
+import { Dashboard,GameRoom,GameRoomPC} from 'views';
 import logo from './dashboardIcon.png';
 import style from './DashboardNavigator.module.css';
 export class DashboardNavigator extends Component {
@@ -31,6 +31,7 @@ export class DashboardNavigator extends Component {
         <Switch>
           <Route exact path={this.path} component={Dashboard} />
           <Route exact path={this.path + '/play'} component={GameRoom} />
+          <Route exact path={this.path + '/playPC'} component={GameRoomPC} />
         </Switch>
       </div>
 

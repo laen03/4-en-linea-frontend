@@ -5,6 +5,7 @@ import {DashboardNavigator} from './DashboardNavigator/DashboardNavigator';
 import {Dashboard} from './Dashboard/Dashboard';
 import {Register} from './Register/Register';
 import {GameRoom} from './GameRoom/GameRoom';
+import {GameRoomPC} from './GameRoomPC/GameRoomPC';
 
 export{
    NotFound,
@@ -12,5 +13,6 @@ export{
    Dashboard,
    Login,
    Register,
-   GameRoom
+   GameRoom,
+   GameRoomPC
 }

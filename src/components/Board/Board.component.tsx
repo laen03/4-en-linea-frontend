@@ -103,7 +103,7 @@ export class Board extends Component<prop> {
         if (id == this.props.player1.id) {
             return this.props.player1.color;
         }
-        if (id == this.props.player2.id) {
+        if (id == this.props.player2.id || id == -1) {
             return this.props.player2.color;
         }
         return '';
