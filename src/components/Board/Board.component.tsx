@@ -3,7 +3,6 @@ import { Cell } from '../../models';
 import { CellComponent } from './Cell.component';
 import { Rule } from './rules';
 import style from './Board.module.css';
-import Settings from '@material-ui/icons/Settings';
 
 const crono = require('proyecto-2c-crono');
 
@@ -145,11 +144,6 @@ export class Board extends Component<prop> {
     render() {
         return (
             <div className="container-fluid">
-                <div className="row mt-1">
-                    <div className="col-12">
-                        <Settings/>
-                    </div>
-                </div>
                 <div className="row mt-2">
                     
                     <div className="col-12 col-md-2">

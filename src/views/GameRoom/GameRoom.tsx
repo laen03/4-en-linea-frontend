@@ -39,11 +39,13 @@ export class GameRoom extends Component {
       playPauseBtn: ' &#9654; Pausar partida '
     };
 
-    this.board = []
+    this.board = [];
+    this.gameRoomInfo();
+  }
 
+  gameRoomInfo(){
     this.state.socket.on('gameRoomInfo', (data: any) => {
       console.log(data);
-
       this.setState({
         roomState: RoomState.PLAYING,
         board: data.board,
@@ -80,7 +82,8 @@ export class GameRoom extends Component {
    * @param data 
    */
   finishGameRoom = (data: any) => {
-    this.setState({ roomState: RoomState.FINISH })
+    this.setState({ roomState: RoomState.FINISH, socket: io(config.ApiUrl) });
+    this.gameRoomInfo();
   }
 
   /**
@@ -110,7 +113,6 @@ export class GameRoom extends Component {
    * Esta funcion se encarga de mandar la solicitud para encontrar partidas
    */
   searchGameRoom() {
-    console.log(this.state.user)
     this.state.socket.emit("searchGame", {
       boardSize: this.state.selectedBoardSize,
       playerInfo: {
