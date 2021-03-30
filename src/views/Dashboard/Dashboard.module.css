@@ -1,13 +1,16 @@
-.createRoom{
-    background-color: #BDE0FE;
-    border-color: #006D77;
-    transition: all 0.2s;
-}
-.createRoom:hover{
-    background-color: #283593;
-    color: blanchedalmond;
+.outlinePrimary{
+    border: 2px solid #0069d9;
+    font-size: 17px;
 }
 
+.outlineTitle{
+    position: relative;
+    top: 15px;
+    left: 10px;
+    height: 35px;
+    font-size: 23px;
+    width: fit-content;
+}
 
 /*06D6A0  BDE0FE
     estilos que se aplican si la resolucion de la pantalla es menor a 768px

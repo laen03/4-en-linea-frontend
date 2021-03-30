@@ -62,40 +62,40 @@ export class Dashboard extends Component {
 
   render() {
     return (
-      <div className='container container-custom'>
-
+      <div className='container'>
         <div className='row mt-1'>
-          <div className='col-7'>
-          </div>
-          <div className='col-2'>
-              {this.state.user.data.username}
-          </div>
-          <div className='col'>
+          <div className='col-md-auto col-12'>
             <img src={this.state.user.data.picture?this.state.user.data.picture:defaultProfilePic} 
-            alt='20' 
-            className="img-thumbnail w-50"></img>
+              alt='20' 
+              className="img-thumbnail profile-image m-auto m-md-0 d-block" />
+          </div>
+          <div className='col-md-auto col-12 text-md-left text-center'>
+              <div className={`${style.outlineTitle} bg-primary rounded-lg pl-2 pr-2 text-white`}>Perfil</div>
+              <div className={`${style.outlinePrimary} p-2 pt-3 rounded-lg w-100`}>
+                <strong>Usuario: </strong>
+                {this.state.user.data.username}
+              </div>
+              
           </div>
         </div>
-
         <div className='row mt-4'>
-          <div className='col-6'>
-          <NavLink to='dashboard/play'>
-              <button type="button" className={`btn btn-block ${style.createRoom}`}>
+          <div className='col-md-6 col-12'>
+          <NavLink to='dashboard/play' className="text-decoration-none">
+              <button type="button" className={`btn btn-block btn-primary`}>
                 Jugar en línea
               </button>
             </NavLink>
           </div>
-          <div className='col-6'>
-            <NavLink to='dashboard/playPC'>
-              <button type="button" className={`btn btn-block ${style.createRoom}`}>
+          <div className='col-md-6 col-12'>
+            <NavLink to='dashboard/playPC' className="text-decoration-none">
+              <button type="button" className={`btn btn-block btn-info mt-2 mt-md-0 `}>
                 Jugar con el ordenador
               </button>
             </NavLink>
           </div>
         </div>
-
         <div className='row mt-2'>
-          <div className='col-12 table-responsive'>
+          <div className='col-12'>
             <DataTable columns={columnas} 
             data={this.state.historyTable} 
             title="Historial de Partidas"

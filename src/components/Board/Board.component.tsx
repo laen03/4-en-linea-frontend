@@ -75,6 +75,10 @@ export class Board extends Component<prop> {
        // this.forceUpdate();
     }
 
+    private resetBoard(){
+        this.setState({board:[]})
+    }
+
     /**
      * Cuando se hace un click en una celda esta funcion se llama.
      * @param {Cell} cell datos de la celda en la que se dio click

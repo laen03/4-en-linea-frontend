@@ -15,24 +15,27 @@ export class DashboardNavigator extends Component {
 
   render() {
     return (
-      <div className={style.background}>
+      <div className='background'>
         <nav className='navbar navbar-dark bg-dark'>
           <div className="container-fluid">
             <NavLink className="navbar-brand" to={this.path}>
-              <img src={logo} width="30" height="30" className="d-inline-block align-top"></img>
-                N en línea
+              <img src={logo} width="30" height="30" className="d-inline-block align-top mr-2"></img>
+                Conecta 4
             </NavLink>
-            <NavLink className="navbar-brandnav-link active" to='/'>
-            Logout
+            <NavLink className="text-decoration-none text-white navbar-brandnav-link active" to='/'>
+              Salir
             </NavLink>
             
           </div>
         </nav>
-        <Switch>
-          <Route exact path={this.path} component={Dashboard} />
-          <Route exact path={this.path + '/play'} component={GameRoom} />
+        <div className={`card mt-md-2 mb-md-3 w-75 mx-auto ${style.boardContainer}`}>
+          <Switch>
+            <Route exact path={this.path} component={Dashboard} />
+            <Route exact path={this.path + '/play'} component={GameRoom} />
           <Route exact path={this.path + '/playPC'} component={GameRoomPC} />
-        </Switch>
+          </Switch>
+        </div>
+        
       </div>
 
     );
