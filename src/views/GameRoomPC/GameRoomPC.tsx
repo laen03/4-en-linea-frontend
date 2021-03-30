@@ -1,14 +1,15 @@
-import { CirclePicker } from 'react-color';
-import { Cell, User } from 'models';
-import { Component, useState } from 'react';
-import { NLineRule, Rule } from 'components/Board/rules';
+import { Cell } from 'models';
+import { Component } from 'react';
+import { NLineRule } from 'components/Board/rules';
 import { Board } from '../../components';
 import { getAuthUser } from '../../services'
 import config from '../../envConfig';
 import style from './GameRoomPC.module.css';
 import ReactLoading from 'react-loading';
 import defaultProfilePic from '../../views/defaultPic.jpg';
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap';
+import Settings from '@material-ui/icons/Settings';
+import { BoardConfigurationDialog } from '../../components/Board/BoardConfiguration.dialog';
+
 const io = require('socket.io-client');
 
 enum RoomState {
@@ -32,7 +33,7 @@ export class GameRoomPC extends Component {
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
-      seg:'',
+      seg: '',
       nivel: 1,
       dropdown: false, //para el select del tamaño del tablero,
       selectedBoardSize: 8
@@ -53,18 +54,18 @@ export class GameRoomPC extends Component {
     });
   }
 
-    /**
-   * Detecta cuando una sala acabo.
-   * @param data 
-   */
-    finishGameRoom = (data:any) =>{
+  /**
+ * Detecta cuando una sala acabo.
+ * @param data 
+ */
+  finishGameRoom = (data: any) => {
 
-    }
+  }
 
   createGameRoom() {
     this.state.socket.emit("createGameRoom", {
       boardSize: this.state.selectedBoardSize,
-      bot: true, 
+      bot: true,
       nivel: this.state.nivel,
       playerInfo: {
         id: this.state.user.data.id,
@@ -78,19 +79,19 @@ export class GameRoomPC extends Component {
     });
   }
 
-  private openCloseDropdown=()=>{
-    this.setState({dropdown:!this.state.dropdown});
+  private openCloseDropdown = () => {
+    this.setState({ dropdown: !this.state.dropdown });
   }
 
   sendBoardSize(size: number) {
-    this.setState({selectedBoardSize: size});
+    this.setState({ selectedBoardSize: size });
   }
 
   render() {
     return (
-      <div className="container mt-2 bg-white">
+      <div className="container gameRoom">
         <div className="row">
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-md-7">
             <h2 className="text-center">Tablero</h2>
             {(this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING) ?
               (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />) :
@@ -104,74 +105,77 @@ export class GameRoomPC extends Component {
                     color: this.state.colorPlayer2,
                     picture: defaultProfilePic,
                     username: 'BAD BOT',
-                    win:false
+                    win: false
                   }}
                   player1={{
                     id: this.state.user.data.id,
                     color: this.state.colorPlayer1,
                     picture: this.state.user.data.picture,
                     username: this.state.user.data.username,
-                    win:false
+                    win: false
                   }}
                   onFinish={this.finishGameRoom}
                 />) :
                 (''))}
           </div>
-          <div className="col-12 col-md-6">
-            <h2 className="text-center">Jugar</h2>
-            <div className={`container-fluid mb-3 ${style.gameRoom}`}>
-            <div className="row mt-5">
-              <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-success btn-block" onClick={(e) => this.createGameRoom()}>
-                      Nivel 1
-                    </button>
+          <div className="col-12 col-md-5">
+            <div className={`outlineTitle bg-info rounded-lg pl-2 pr-2 text-white`}>Creador</div>
+            <div className={`container-fluid mb-3 outlineSecondary rounded-lg`}>
+              <div className="row mt-4">
+                <div className="col-12 col-md-5">
+                  <label><strong>Tablero:</strong></label>
+                </div>
+                <div className="col-12 col-md-7">
+                  <select defaultValue="8" className="w-100 p-1" onChange={(e: any) => this.sendBoardSize(e.target.value)}>
+                    <option value="6">6x6</option>
+                    <option value="8">8x8</option>
+                    <option value="10">10x10</option>
+                  </select>
                 </div>
               </div>
-                <div className="row mt-5">
-                  <div className="col-12">
-                    <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-success btn-block" onClick={(e) => this.createGameRoom()}>
-                        Nivel 2
-                      </button>
-                  </div>
-                </div>
-                <div className="row mt-5">
-                  <div className="col-12">
-                    <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-success btn-block" onClick={(e) => this.createGameRoom()}>
-                        Nivel 3
-                      </button>
-                  </div>
-                </div>
-              <div className="row mt-5">
-                <div className="col-6">
-                  <h4 className='text-center'>Player1</h4>
-                  <CirclePicker className='center' width='100%' colors={['#F44E3B', '#FE9200', '#FCDC00', '#A4DD00']}
-                    color={this.state.colorPlayer1}
-                    onChangeComplete={(color: { hex: any; }) => this.setState({ colorPlayer1: color.hex })}
-                  />
-                </div>
-                <div className="col-6">
-                  <h4 className='text-center'>Player2</h4>
-                  <CirclePicker className='center' width='100%' colors={['#68BC00', '#009CE0', '#7B64FF', '#FA28FF']}
-                    color={this.state.colorPlayer2}
-                    onChangeComplete={(color: { hex: any; }) => this.setState({ colorPlayer2: color.hex })}
-                  />
+              <div className="row mt-4">
+                <div className="col-12">
+                  <label><strong>Dificultad:</strong></label>
                 </div>
               </div>
-              <div className='row mt-5'>
-                <div className='col-3'></div>
-                <div className='col-6'>
-                    <Dropdown isOpen={this.state.dropdown} toggle={this.openCloseDropdown} direction='right'>
-                      <DropdownToggle caret>
-                        Tamaño del tablero
-                      </DropdownToggle>
-
-                      <DropdownMenu>
-                        <DropdownItem header>Elige el tamaño</DropdownItem>
-                            <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
-                            <DropdownItem onClick={()=>this.sendBoardSize(8)}>8x8</DropdownItem>
-                            <DropdownItem onClick={()=>this.sendBoardSize(10)}>10x10</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+              <div className="row mt-2">
+                <div className="col-12">
+                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom()}>
+                    Nivel 1
+                      </button>
+                </div>
+              </div>
+              <div className="row mt-3">
+                <div className="col-12">
+                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom()}>
+                    Nivel 2
+                        </button>
+                </div>
+              </div>
+              <div className="row mt-3">
+                <div className="col-12">
+                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom()}>
+                    Nivel 3
+                        </button>
+                </div>
+              </div>
+              <div className="row mt-5 mb-3">
+                <div className="col-12">
+                  <div onClick={() => this.setState({ dialog: true })}>
+                    <Settings />Configurar Tablero
+                  </div>
+                  <BoardConfigurationDialog
+                    open={this.state.dialog}
+                    params={{
+                      colorPlayer1: this.state.colorPlayer1,
+                      colorPlayer2: this.state.colorPlayer2
+                    }}
+                    onClose={(data: any) => {
+                      this.setState({ dialog: false })
+                      if (data) {
+                        this.setState(data)
+                      }
+                    }} />
                 </div>
               </div>
             </div>

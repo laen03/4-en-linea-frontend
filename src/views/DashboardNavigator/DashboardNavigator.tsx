@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import { Dashboard,GameRoom,GameRoomPC} from 'views';
 import logo from './dashboardIcon.png';
 import style from './DashboardNavigator.module.css';
+import ExitToApp from '@material-ui/icons/ExitToApp';
+
 export class DashboardNavigator extends Component {
 
   private path: string = '/dashboard';
@@ -23,7 +25,7 @@ export class DashboardNavigator extends Component {
                 Conecta 4
             </NavLink>
             <NavLink className="text-decoration-none text-white navbar-brandnav-link active" to='/'>
-              Salir
+              <ExitToApp/>Salir
             </NavLink>
             
           </div>

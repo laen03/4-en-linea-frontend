@@ -3,6 +3,8 @@ import { Cell } from '../../models';
 import { CellComponent } from './Cell.component';
 import { Rule } from './rules';
 import style from './Board.module.css';
+import Settings from '@material-ui/icons/Settings';
+
 const crono = require('proyecto-2c-crono');
 
 interface prop {
@@ -143,18 +145,22 @@ export class Board extends Component<prop> {
     render() {
         return (
             <div className="container-fluid">
+                <div className="row mt-1">
+                    <div className="col-12">
+                        <Settings/>
+                    </div>
+                </div>
                 <div className="row mt-2">
                     
-                        <div className="col-12 col-md-2">
-                            <img className="d-block m-auto" src={this.props.player2.picture} />
+                    <div className="col-12 col-md-2">
+                        <img className="d-block m-auto" src={this.props.player2.picture} />
+                    </div>
+                    <div className="col-12 col-md-3 text-center">
+                        <div className={this.props.player2.win?style.winner:''}>
+                            {this.props.player2.username}
                         </div>
-                        <div className="col-12 col-md-3 text-center">
-                            <div className={this.props.player2.win?style.winner:''}>
-                                {this.props.player2.username}
-                            </div>
-                        </div>
-                    
-                    
+                    </div>
+
                     <div className="col-12 col-md-2 text-center font-weight-bold">
                         <div>VS</div>
                         <div>{this.state.timer}</div>

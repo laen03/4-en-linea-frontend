@@ -1,13 +1,14 @@
-import { CirclePicker } from 'react-color';
-import { Cell, User } from 'models';
-import { Component, useState } from 'react';
-import { NLineRule, Rule } from 'components/Board/rules';
+import { Cell } from 'models';
+import { Component } from 'react';
+import { NLineRule } from 'components/Board/rules';
 import { Board } from '../../components';
 import { getAuthUser } from '../../services'
 import config from '../../envConfig';
 import style from './GameRoom.module.css';
 import ReactLoading from 'react-loading';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap'
+import Settings from '@material-ui/icons/Settings';
+import { BoardConfigurationDialog } from '../../components/Board/BoardConfiguration.dialog';
+
 const io = require('socket.io-client');
 
 enum RoomState {
@@ -31,6 +32,7 @@ export class GameRoom extends Component {
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
+      dialog: false,
       seg: '',
       dropdown: false, //para el select del tamaño del tablero,
       selectedBoardSize: 8,
@@ -136,18 +138,30 @@ export class GameRoom extends Component {
   }
 
   pauseGame() {
-    if (this.state.playPauseBtn == ' &#9654; Pausar partida '){
+    if (this.state.playPauseBtn == ' &#9654; Pausar partida ') {
       this.setState({ playPauseBtn: ' &#9654; Reanudar partida ' })
-    }else{
+    } else {
       this.setState({ playPauseBtn: ' &#9654; Pausar partida ' })
     }
   }
 
+  /*
+    selectedValue = ()=>{
+  
+    }
+  
+    handleClose = (valu:any) => {
+      this.setState({dialog:false});
+    };
+  
+    
+              <Settings />*/
+
   render() {
     return (
-      <div className="container mt-2 bg-white">
+      <div className="container">
         <div className="row">
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-md-7">
             <h2 className="text-center">Tablero</h2>
             {(this.state.roomState == RoomState.WAITING) ?
               (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />) :
@@ -174,23 +188,22 @@ export class GameRoom extends Component {
                 />) :
                 (''))}
           </div>
-          <div className="col-12 col-md-6">
-            <h2 className="text-center">Jugar</h2>
-            <div className={`container-fluid mb-3 ${style.gameRoom}`}>
-              <div className='row mt-4'>
-                <div className='col-3'></div>
-                <div className='col-6'>
-
-                  <select name="boardSize" id="boardSize" className={`btn btn-primary`} onChange={(e:any)=>this.sendBoardSize(e.target.value)}>
-                    <option value="8">Tamaño del tablero</option>
+          <div className="col-12 col-md-5">
+            <div className={`outlineTitle bg-primary rounded-lg pl-2 pr-2 text-white`}>Buscador</div>
+            <div className={`container-fluid mb-3 outlinePrimary rounded-lg`}>
+              <div className="row mt-4">
+                <div className="col-12 col-md-5">
+                  <label><strong>Tablero:</strong></label>
+                </div>
+                <div className="col-12 col-md-7">
+                  <select defaultValue="8" className="w-100 p-1" onChange={(e: any) => this.sendBoardSize(e.target.value)}>
                     <option value="6">6x6</option>
                     <option value="8">8x8</option>
                     <option value="10">10x10</option>
                   </select>
-
                 </div>
               </div>
-              <div className="row mt-3">
+              <div className="row mt-5">
                 <div className="col-12 col-md-5">
                   <label><strong>Codigo:</strong> {this.state.ownCode}</label>
                 </div>
@@ -213,31 +226,34 @@ export class GameRoom extends Component {
               <div className="row mt-5">
                 <div className="col-12">
                   <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-success btn-block" onClick={(e) => this.searchGameRoom()}>
-                    Buscar Partida
+                    Buscar Partida Aleatoria
                     </button>
                 </div>
               </div>
               <div className="row mt-5">
-                <div className="col-6">
-                  <h4 className='text-center'>Player1</h4>
-                  <CirclePicker className='center' width='100%' colors={['#F44E3B', '#FE9200', '#FCDC00', '#A4DD00']}
-                    color={this.state.colorPlayer1}
-                    onChangeComplete={(color: { hex: any; }) => this.setState({ colorPlayer1: color.hex })}
-                  />
-                </div>
-                <div className="col-6">
-                  <h4 className='text-center'>Player2</h4>
-                  <CirclePicker className='center' width='100%' colors={['#68BC00', '#009CE0', '#7B64FF', '#FA28FF']}
-                    color={this.state.colorPlayer2}
-                    onChangeComplete={(color: { hex: any; }) => this.setState({ colorPlayer2: color.hex })}
-                  />
+                <div className="col-12">
+                  <div onClick={() => this.setState({ dialog: true })}>
+                    <Settings />Configurar Tablero
+                  </div>
+                  <BoardConfigurationDialog
+                    open={this.state.dialog}
+                    params={{
+                      colorPlayer1: this.state.colorPlayer1,
+                      colorPlayer2: this.state.colorPlayer2
+                    }}
+                    onClose={(data: any) => {
+                      this.setState({ dialog: false })
+                      if (data) {
+                        this.setState(data)
+                      }
+                    }} />
                 </div>
               </div>
               <div className="row mt-5">
                 <div className="col-1"></div>
                 <div className="col-10">
                   <button id="playPauseBtn" className="btn btn-light btn-block" onClick={(e) => this.pauseGame()}>
-                  {this.state.playPauseBtn}
+                    {this.state.playPauseBtn}
                   </button>
                 </div>
                 <div className="col-1"></div>
@@ -246,10 +262,12 @@ export class GameRoom extends Component {
           </div>
         </div>
       </div>
-
     );
   }
 
 
 
 }
+
+/**
+ */
