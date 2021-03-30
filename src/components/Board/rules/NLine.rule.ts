@@ -67,7 +67,7 @@ export class NLineRule implements Rule{
                     updateFunction(i,y,userId);
                     return true;
                 }
-            }      
+            }
         }
         return false;
     }
