@@ -7,7 +7,7 @@ import { getAuthUser } from '../../services'
 import config from '../../envConfig';
 import style from './GameRoom.module.css';
 import ReactLoading from 'react-loading';
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap'
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap'
 const io = require('socket.io-client');
 
 enum RoomState {
@@ -31,9 +31,10 @@ export class GameRoom extends Component {
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
-      seg:'', 
+      seg: '',
       dropdown: false, //para el select del tamaño del tablero,
-      selectedBoardSize: 8
+      selectedBoardSize: 8,
+      playPauseBtn: ' &#9654; Pausar partida '
     };
 
     this.board = []
@@ -47,7 +48,7 @@ export class GameRoom extends Component {
         player2: data.player,
         gamerule: new NLineRule(this.state.socket, data.isPlaying)
       });
-      
+
       //this.forceUpdate();
     });
   }
@@ -76,8 +77,8 @@ export class GameRoom extends Component {
    * Detecta cuando una sala acabo.
    * @param data 
    */
-  finishGameRoom = (data:any) =>{
-    this.setState({roomState: RoomState.FINISH})
+  finishGameRoom = (data: any) => {
+    this.setState({ roomState: RoomState.FINISH })
   }
 
   /**
@@ -116,7 +117,7 @@ export class GameRoom extends Component {
         picture: this.state.user.data.picture
       }
     });
-    this.setState({roomState: RoomState.WAITING,board:null})
+    this.setState({ roomState: RoomState.WAITING, board: null })
 
     this.state.socket.on('searchedGame', (data: any) => {
       if (data.searching) {
@@ -126,16 +127,20 @@ export class GameRoom extends Component {
     });
   }
 
-  private openCloseDropdown=()=>{
-      this.setState({dropdown:!this.state.dropdown});
+  private openCloseDropdown = () => {
+    this.setState({ dropdown: !this.state.dropdown });
   }
 
   sendBoardSize(size: number) {
-    this.setState({selectedBoardSize: size});
+    this.setState({ selectedBoardSize: size });
   }
 
-  pauseGame(){
-    console.log("Still working on it...")
+  pauseGame() {
+    if (this.state.playPauseBtn == ' &#9654; Pausar partida '){
+      this.setState({ playPauseBtn: ' &#9654; Reanudar partida ' })
+    }else{
+      this.setState({ playPauseBtn: ' &#9654; Pausar partida ' })
+    }
   }
 
   render() {
@@ -146,7 +151,7 @@ export class GameRoom extends Component {
             <h2 className="text-center">Tablero</h2>
             {(this.state.roomState == RoomState.WAITING) ?
               (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />) :
-              (this.state.roomState == RoomState.PLAYING || this.state.roomState == RoomState.FINISH?
+              (this.state.roomState == RoomState.PLAYING || this.state.roomState == RoomState.FINISH ?
                 (<Board
                   matchTime={15}
                   gameRule={this.state.gamerule}
@@ -156,14 +161,14 @@ export class GameRoom extends Component {
                     color: this.state.colorPlayer2,
                     picture: this.state.player2.picture,
                     username: this.state.player2.username,
-                    win:false
+                    win: false
                   }}
                   player1={{
                     id: this.state.user.data.id,
                     color: this.state.colorPlayer1,
                     picture: this.state.user.data.picture,
                     username: this.state.user.data.username,
-                    win:false
+                    win: false
                   }}
                   onFinish={this.finishGameRoom}
                 />) :
@@ -173,21 +178,17 @@ export class GameRoom extends Component {
             <h2 className="text-center">Jugar</h2>
             <div className={`container-fluid mb-3 ${style.gameRoom}`}>
               <div className='row mt-4'>
-                  <div className='col-3'></div>
-                  <div className='col-6'>
-                    <Dropdown isOpen={this.state.dropdown} toggle={this.openCloseDropdown} direction='right'>
-                      <DropdownToggle caret>
-                        Tamaño del tablero
-                      </DropdownToggle>
+                <div className='col-3'></div>
+                <div className='col-6'>
 
-                      <DropdownMenu>
-                      <DropdownItem header>Elige el tamaño</DropdownItem>
-                          <DropdownItem onClick={()=>this.sendBoardSize(6)}>6x6</DropdownItem>
-                          <DropdownItem onClick={()=>this.sendBoardSize(8)}>8x8</DropdownItem>
-                          <DropdownItem onClick={()=>this.sendBoardSize(10)}>10x10</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </div>
+                  <select name="boardSize" id="boardSize" className={`btn btn-primary`} onChange={(e:any)=>this.sendBoardSize(e.target.value)}>
+                    <option value="8">Tamaño del tablero</option>
+                    <option value="6">6x6</option>
+                    <option value="8">8x8</option>
+                    <option value="10">10x10</option>
+                  </select>
+
+                </div>
               </div>
               <div className="row mt-3">
                 <div className="col-12 col-md-5">
@@ -206,12 +207,12 @@ export class GameRoom extends Component {
                 <div className="col-12 col-md-7">
                   <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-block btn-primary" onClick={(e) => this.joinGameRoom()}>
                     Unirse a Sala
-                    </button>
+                  </button>
                 </div>
               </div>
               <div className="row mt-5">
                 <div className="col-12">
-                  <button disabled={ !(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-success btn-block" onClick={(e) => this.searchGameRoom()}>
+                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-success btn-block" onClick={(e) => this.searchGameRoom()}>
                     Buscar Partida
                     </button>
                 </div>
@@ -235,8 +236,8 @@ export class GameRoom extends Component {
               <div className="row mt-5">
                 <div className="col-1"></div>
                 <div className="col-10">
-                  <button className="btn btn-warning btn-block" onClick={(e) => this.searchGameRoom()}>
-                    Pausar partida
+                  <button id="playPauseBtn" className="btn btn-light btn-block" onClick={(e) => this.pauseGame()}>
+                  {this.state.playPauseBtn}
                   </button>
                 </div>
                 <div className="col-1"></div>
