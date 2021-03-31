@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { getAuthUser, getHistory } from '../../services'
+import {PlayerService,AuthService} from '../../services'
 
 import style from './Dashboard.module.css';
 import defaultProfilePic from '../../views/defaultPic.jpg';
@@ -33,12 +33,12 @@ export class Dashboard extends Component {
 
   constructor(props: any) {
     super(props);
-    this.state = { user: getAuthUser(), historyTable: [] };
+    this.state = { user: AuthService.getAuthUser(), historyTable: [] };
   }
 
 
   private getHistory(){
-    getHistory({size:20,page_number:0, id_user_account: this.state.user.data.id}).then( result =>{
+    PlayerService.getHistory({size:20,page_number:0, id_user_account: this.state.user.data.id}).then( result =>{
       if(result.success){
         for(var i in result.data){
           if(result.data[i].gamestatus == 0){
@@ -57,7 +57,7 @@ export class Dashboard extends Component {
   
   componentDidMount() {
     this.getHistory()
-    this.setState({ user: getAuthUser() });
+    this.setState({ user: AuthService.getAuthUser() });
   }
 
   render() {

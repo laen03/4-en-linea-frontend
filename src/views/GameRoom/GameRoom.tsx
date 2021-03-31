@@ -2,7 +2,7 @@ import { Cell } from 'models';
 import { Component } from 'react';
 import { NLineRule } from 'components/Board/rules';
 import { Board } from '../../components';
-import { getAuthUser } from '../../services'
+import {AuthService} from '../../services';
 import config from '../../envConfig';
 import style from './GameRoom.module.css';
 import ReactLoading from 'react-loading';
@@ -10,7 +10,7 @@ import Settings from '@material-ui/icons/Settings';
 import { BoardConfigurationDialog } from '../../components/Board/BoardConfiguration.dialog';
 
 const io = require('socket.io-client');
-
+const token = AuthService.getAccessToken();
 enum RoomState {
   IDEL,
   FINISH,
@@ -24,10 +24,9 @@ export class GameRoom extends Component {
 
   constructor(props: any) {
     super(props);
-
     this.state = {
-      user: getAuthUser(),
-      socket: io(config.ApiUrl),
+      user: AuthService.getAuthUser(),
+      socket: io(config.ApiUrl,{query:{token:token}}),
       roomState: RoomState.IDEL,
       player2: {},
       colorPlayer1: '#F44E3B',
@@ -82,7 +81,7 @@ export class GameRoom extends Component {
    * @param data 
    */
   finishGameRoom = (data: any) => {
-    this.setState({ roomState: RoomState.FINISH, socket: io(config.ApiUrl) });
+    this.setState({ roomState: RoomState.FINISH, socket: io(config.ApiUrl,{query:{token:token}}) });
     this.gameRoomInfo();
   }
 

@@ -2,7 +2,7 @@ import { Cell } from 'models';
 import { Component } from 'react';
 import { NLineRule } from 'components/Board/rules';
 import { Board } from '../../components';
-import { getAuthUser } from '../../services'
+import {AuthService} from '../../services'
 import config from '../../envConfig';
 import style from './GameRoomPC.module.css';
 import ReactLoading from 'react-loading';
@@ -11,7 +11,7 @@ import Settings from '@material-ui/icons/Settings';
 import { BoardConfigurationDialog } from '../../components/Board/BoardConfiguration.dialog';
 
 const io = require('socket.io-client');
-
+const token = AuthService.getAccessToken();
 enum RoomState {
   IDEL,
   SEARCHING,
@@ -27,8 +27,8 @@ export class GameRoomPC extends Component {
     super(props);
 
     this.state = {
-      user: getAuthUser(),
-      socket: io(config.ApiUrl),
+      user: AuthService.getAuthUser(),
+      socket: io(config.ApiUrl,{query:{token:token}}),
       roomState: RoomState.IDEL,
       player2: {},
       colorPlayer1: '#F44E3B',

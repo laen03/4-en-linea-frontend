@@ -5,7 +5,7 @@ import GoogleLogin from 'react-google-login';
 import { NavLink, Redirect } from 'react-router-dom';
 import { infoToast,errorToast,successToast,deleteToast } from 'services';
 import SimpleReactValidator from 'simple-react-validator';
-import { login, facebook,google } from '../../services/auth.service';
+import AuthService from '../../services/auth.service';
 
 import styles from './Login.module.css';
 
@@ -34,7 +34,7 @@ export class Login extends Component {
 
   private responseFacebook = (response: any) => {
     infoToast("Enviando");
-    facebook(response.userID,response.accessToken,response.email,response.picture.data.url).then( result => {
+    AuthService.facebook(response.userID,response.accessToken,response.email,response.picture.data.url).then( result => {
       if(result.success){
         successToast("Logueado");
         this.setState({redirect:true});
@@ -48,7 +48,7 @@ export class Login extends Component {
 
   private responseGoogle = (response: any) => {
     infoToast("Enviando");
-    google(response.googleId, response.tokenId, response.profileObj.email,response.profileObj.imageUrl).then( result => {
+    AuthService.google(response.googleId, response.tokenId, response.profileObj.email,response.profileObj.imageUrl).then( result => {
       if(result.success){
         successToast("Logueado");
         this.setState({redirect:true});
@@ -67,7 +67,7 @@ export class Login extends Component {
 
   private login(){
     infoToast("Enviando");
-    login({email:this.state.email,password:this.state.password}).then( result =>{
+    AuthService.login({email:this.state.email,password:this.state.password}).then( result =>{
       if(result.success){
         successToast("Logueado");
         this.setState({redirect:true});

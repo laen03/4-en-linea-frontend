@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
 import { ToastContainer, toast } from 'react-toastify';
-import { register } from '../../services/auth.service';
+import AuthService from '../../services/auth.service';
 
 
 import style from './Register.module.css';
@@ -32,7 +32,7 @@ export class Register extends Component {
         if(this.state.password == this.state.passwordConfirmed){
             this.setState({ login: true });
             toast.info("Registrando", {position: 'bottom-right', autoClose: 1500, pauseOnHover: false, draggable: false});
-            register({email:this.state.email, username:this.state.username, password:this.state.password}).then(resulte=>{
+            AuthService.register({email:this.state.email, username:this.state.username, password:this.state.password}).then(resulte=>{
                 console.log(resulte);
             })
         }else{
