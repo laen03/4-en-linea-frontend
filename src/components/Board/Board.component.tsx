@@ -147,7 +147,7 @@ export class Board extends Component<prop> {
                 <div className="row mt-2">
                     
                     <div className="col-12 col-md-2">
-                        <img className="d-block m-auto" src={this.props.player2.picture} />
+                        <img className="d-block m-auto" style={{height:'50px', width:'50px'}} src={this.props.player2.picture} />
                     </div>
                     <div className="col-12 col-md-3 text-center">
                         <div className={this.props.player2.win?style.winner:''}>

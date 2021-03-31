@@ -2,7 +2,7 @@ import { Cell } from 'models';
 import { Component } from 'react';
 import { NLineRule } from 'components/Board/rules';
 import { Board } from '../../components';
-import { getAuthUser } from '../../services'
+import {AuthService} from '../../services'
 import config from '../../envConfig';
 import style from './GameRoomPC.module.css';
 import ReactLoading from 'react-loading';
@@ -11,7 +11,7 @@ import Settings from '@material-ui/icons/Settings';
 import { BoardConfigurationDialog } from '../../components/Board/BoardConfiguration.dialog';
 
 const io = require('socket.io-client');
-
+const token = AuthService.getAccessToken();
 enum RoomState {
   IDEL,
   SEARCHING,
@@ -27,14 +27,13 @@ export class GameRoomPC extends Component {
     super(props);
 
     this.state = {
-      user: getAuthUser(),
-      socket: io(config.ApiUrl),
+      user: AuthService.getAuthUser(),
+      socket: io(config.ApiUrl,{query:{token:token}}),
       roomState: RoomState.IDEL,
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
       seg: '',
-      nivel: 1,
       dropdown: false, //para el select del tamaño del tablero,
       selectedBoardSize: 8
     };
@@ -62,11 +61,11 @@ export class GameRoomPC extends Component {
 
   }
 
-  createGameRoom() {
+  createGameRoom(nivel:number) {
     this.state.socket.emit("createGameRoom", {
       boardSize: this.state.selectedBoardSize,
       bot: true,
-      nivel: this.state.nivel,
+      nivel: nivel,
       playerInfo: {
         id: this.state.user.data.id,
         username: this.state.user.data.username,
@@ -140,21 +139,21 @@ export class GameRoomPC extends Component {
               </div>
               <div className="row mt-2">
                 <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom()}>
+                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(1)}>
                     Nivel 1
                       </button>
                 </div>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom()}>
+                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(2)}>
                     Nivel 2
                         </button>
                 </div>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom()}>
+                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(3)}>
                     Nivel 3
                         </button>
                 </div>
