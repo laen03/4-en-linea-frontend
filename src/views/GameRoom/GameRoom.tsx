@@ -15,6 +15,7 @@ enum RoomState {
   IDEL,
   FINISH,
   WAITING,
+  DISCONNECTED,
   PLAYING
 }
 export class GameRoom extends Component {
@@ -27,7 +28,7 @@ export class GameRoom extends Component {
     this.state = {
       user: AuthService.getAuthUser(),
       socket: io(config.ApiUrl,{query:{token:token}}),
-      roomState: RoomState.IDEL,
+      roomState: RoomState.DISCONNECTED,
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
@@ -37,9 +38,13 @@ export class GameRoom extends Component {
       selectedBoardSize: 8,
       playPauseBtn: ' &#9654; Pausar partida '
     };
-
+    this.state.socket.on('connect',this.socketConnected)
     this.board = [];
     this.gameRoomInfo();
+  }
+
+  socketConnected = (socket:any) => {
+    this.setState({roomState:RoomState.IDEL});
   }
 
   gameRoomInfo(){
@@ -82,6 +87,7 @@ export class GameRoom extends Component {
    */
   finishGameRoom = (data: any) => {
     this.setState({ roomState: RoomState.FINISH, socket: io(config.ApiUrl,{query:{token:token}}) });
+    this.state.socket.on('connect',this.socketConnected)
     this.gameRoomInfo();
   }
 

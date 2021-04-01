@@ -16,6 +16,7 @@ enum RoomState {
   IDEL,
   SEARCHING,
   WAITING,
+  DISCONNECTED,
   PLAYING
 }
 export class GameRoomPC extends Component {
@@ -29,7 +30,7 @@ export class GameRoomPC extends Component {
     this.state = {
       user: AuthService.getAuthUser(),
       socket: io(config.ApiUrl,{query:{token:token}}),
-      roomState: RoomState.IDEL,
+      roomState: RoomState.DISCONNECTED,
       player2: {},
       colorPlayer1: '#F44E3B',
       colorPlayer2: '#68BC00',
@@ -37,7 +38,7 @@ export class GameRoomPC extends Component {
       dropdown: false, //para el select del tamaño del tablero,
       selectedBoardSize: 8
     };
-
+    this.state.socket.on('connect',this.socketConnected)
     this.board = []
 
     this.state.socket.on('gameRoomInfo', (data: any) => {
@@ -51,6 +52,10 @@ export class GameRoomPC extends Component {
       });
       //this.forceUpdate();
     });
+  }
+
+  socketConnected = (socket:any) => {
+    this.setState({roomState:RoomState.IDEL});
   }
 
   /**
