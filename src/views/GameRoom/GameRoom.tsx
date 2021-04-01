@@ -8,8 +8,7 @@ import style from './GameRoom.module.css';
 import ReactLoading from 'react-loading';
 import Settings from '@material-ui/icons/Settings';
 import { BoardConfigurationDialog } from '../../components/Board/BoardConfiguration.dialog';
-import PauseIcon from '@material-ui/icons/Pause';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+
 
 const io = require('socket.io-client');
 const token = AuthService.getAccessToken();
@@ -36,10 +35,7 @@ export class GameRoom extends Component {
       colorPlayer2: '#68BC00',
       dialog: false,
       seg: '',
-      dropdown: false, //para el select del tamaño del tablero,
-      selectedBoardSize: 8,
-      playPauseBtn: 'Pausar partida',
-      isPaused: false
+      selectedBoardSize: 8
     };
     this.state.socket.on('connect',this.socketConnected)
     this.board = [];
@@ -139,24 +135,8 @@ export class GameRoom extends Component {
     });
   }
 
-  private openCloseDropdown = () => {
-    this.setState({ dropdown: !this.state.dropdown });
-  }
-
   sendBoardSize(size: number) {
     this.setState({ selectedBoardSize: size });
-  }
-
-  pauseGame() {
-    if (this.state.playPauseBtn == 'Pausar partida') {
-      this.state.socket.emit("pauseGame", true)
-      this.setState({ playPauseBtn: 'Reanudar partida' })
-      console.log("Partida pausada")
-    } else {
-      this.state.socket.emit("pauseGame", false)
-      this.setState({ playPauseBtn: 'Pausar partida' })
-      console.log("Partida reanudada")
-    }
   }
 
   /*
@@ -262,15 +242,6 @@ export class GameRoom extends Component {
                       }
                     }} />
                 </div>
-              </div>
-              <div className="row mt-5 mb-2">
-                <div className="col-1"></div>
-                <div className="col-10">
-                  <button className="btn btn-light btn-block" onClick={(e) => this.pauseGame()}>
-                    <PlayArrowIcon /> {this.state.playPauseBtn}
-                  </button>
-                </div>
-                <div className="col-1"></div>
               </div>
             </div>
           </div>
