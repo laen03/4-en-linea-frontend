@@ -140,11 +140,11 @@ export class Board extends Component<prop> {
     }
 
     public pauseGame(){
-        this.props.gameRule.pauseGame()
+        this.props.gameRule.pauseGame();
     }
 
-    public abandonGame(){
-        console.log("asdfasdf")
+    public leaveGame(leave:boolean){
+        this.props.gameRule.leaveGame(leave);
     }
 
 
@@ -216,7 +216,7 @@ export class Board extends Component<prop> {
                         </button>
                     </div>
                     <div className="col-5 mt-2 mb-2">
-                        <button className="btn btn-block btn-danger btn-sm" onClick={() => this.abandonGame()}>
+                        <button className="btn btn-block btn-danger btn-sm" onClick={() => this.leaveGame(true)}>
                             <CloseIcon/> Abandonar partida
                         </button>
                     </div>

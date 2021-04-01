@@ -8,6 +8,8 @@ export abstract class Rule {
 
     abstract pauseGame(): boolean;
 
+    abstract leaveGame(leave:boolean): boolean;
+
     abstract initRule(data:any):boolean;
 
     abstract onClick(board:Cell[][], cell:Cell, userId:number, updateFunction:any):boolean;

@@ -49,7 +49,7 @@ export class GameRoomPC extends Component {
         roomState: RoomState.PLAYING,
         board: data.board,
         player2: data.player,
-        gamerule: new NLineRule(this.state.socket, data.isPlaying, data.isPaused)
+        gamerule: new NLineRule(this.state.socket, data.isPlaying, data.isPaused, data.isLeave)
       });
       //this.forceUpdate();
     });
@@ -76,7 +76,7 @@ export class GameRoomPC extends Component {
         roomState: RoomState.PLAYING,
         board: data.board,
         player2: data.player,
-        gamerule: new NLineRule(this.state.socket, data.isPlaying, data.isPaused)
+        gamerule: new NLineRule(this.state.socket, data.isPlaying, data.isPaused, data.isLeave)
       });
 
       //this.forceUpdate();

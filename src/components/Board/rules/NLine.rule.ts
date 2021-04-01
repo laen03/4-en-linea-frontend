@@ -7,11 +7,13 @@ export class NLineRule implements Rule{
     private socket:any;
     private isPlaying:boolean;
     private isPaused: boolean;
+    private isLeave:boolean;
 
-    constructor(socket:any,isPlaying:boolean, isPaused: boolean){
+    constructor(socket:any, isPlaying:boolean, isPaused:boolean, isLeave:boolean){
         this.socket = socket;
         this.isPlaying = isPlaying;
         this.isPaused = isPaused;
+        this.isLeave = isLeave;
         this.onClick = this.onClick.bind(this);
     }
 
@@ -28,6 +30,11 @@ export class NLineRule implements Rule{
         this.sendData('pauseGame', this.isPaused)
         return true;
     }
+    public leaveGame(leave:boolean): boolean{
+        this.isLeave = leave;
+        this.sendData('leaveGame', this.isLeave)
+        return true;
+    }
 
 
     public initRule(data:any):boolean{
@@ -42,10 +49,11 @@ export class NLineRule implements Rule{
             data.onFinish(response)
         });
         this.socket.on('pauseGame', (response:any) => {
-            console.log(response)
             this.isPaused = response;
         });
-
+        this.socket.on('leaveGame', (response:any) => {
+            this.isPaused = response;
+        });
         return true;
     }
 
@@ -74,7 +82,7 @@ export class NLineRule implements Rule{
     }
 
     public onClick(board: Cell[][], cell:Cell, userId:number, updateFunction:any): boolean {
-        if(this.isPlaying && !this.isPaused){
+        if(this.isPlaying && !this.isPaused && !this.isLeave){
             var y = cell.y;
             this.isPlaying=false;
             for(var i = board.length-1; i >= 0;i--){
