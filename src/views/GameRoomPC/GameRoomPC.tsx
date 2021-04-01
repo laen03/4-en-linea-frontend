@@ -12,12 +12,13 @@ import { BoardConfigurationDialog } from '../../components/Board/BoardConfigurat
 
 const io = require('socket.io-client');
 const token = AuthService.getAccessToken();
+
 enum RoomState {
   IDEL,
-  SEARCHING,
   WAITING,
   DISCONNECTED,
-  PLAYING
+  PLAYING,
+  FINISH
 }
 export class GameRoomPC extends Component {
 
@@ -63,7 +64,23 @@ export class GameRoomPC extends Component {
  * @param data 
  */
   finishGameRoom = (data: any) => {
+    this.setState({ roomState: RoomState.FINISH, socket: io(config.ApiUrl,{query:{token:token}}) });
+    this.state.socket.on('connect',this.socketConnected)
+    this.gameRoomInfo();
+  }
 
+  gameRoomInfo(){
+    this.state.socket.on('gameRoomInfo', (data: any) => {
+      console.log(data);
+      this.setState({
+        roomState: RoomState.PLAYING,
+        board: data.board,
+        player2: data.player,
+        gamerule: new NLineRule(this.state.socket, data.isPlaying, data.isPaused)
+      });
+
+      //this.forceUpdate();
+    });
   }
 
   createGameRoom(nivel:number) {
