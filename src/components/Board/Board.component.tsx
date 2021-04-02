@@ -8,6 +8,9 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
 
 const crono = require('proyecto-2c-crono');
+var pause = false;
+var arTimer;
+var timer = 15;
 
 interface prop {
     board: Cell[][],
@@ -46,7 +49,6 @@ export class Board extends Component<prop> {
             timer: ''
         };
 
-       
 
         this.props.gameRule.initRule({
             updata: this.update,
@@ -119,10 +121,18 @@ export class Board extends Component<prop> {
      * Esta Funcion se encarga de llevar una cuenta regresiva con el objetivo 
      * de mostrarle al jugador cuanto tiempo le queda para mover su ficha 
      */
-    public startTimer = () => {
+    public startTimer = (time:number) => {
         const cont = new crono.Descontador(this.props.matchTime);
         var d = cont.start().subscribe(
             (data: string) => {
+                if (pause){
+                    arTimer = data.split(":");
+                    timer = parseInt(arTimer[2]);
+                    d.unsubscribe();
+                }else{
+                    this.startTimer(timer);
+
+                }
                 if (!this.props.gameRule.getIsPlaying()) {
                     d.unsubscribe();
                     this.setState({ timer: '' });
@@ -130,6 +140,7 @@ export class Board extends Component<prop> {
                 }
                 if (data === 'FINISH') {
                     d.unsubscribe();
+                    this.props.gameRule.setIsPlaying(false);
                     this.setState({ timer: 'Fin' });
                     return;
                 }
@@ -140,11 +151,13 @@ export class Board extends Component<prop> {
     }
 
     public pauseGame(){
+        pause = true;
         this.props.gameRule.pauseGame();
     }
 
     public leaveGame(leave:boolean){
         this.props.gameRule.leaveGame(leave);
+        this.props.onFinish();
     }
 
 

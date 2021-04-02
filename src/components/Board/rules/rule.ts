@@ -8,6 +8,8 @@ export abstract class Rule {
 
     abstract pauseGame(): boolean;
 
+    abstract setIsPlaying(state:boolean):void;
+
     abstract leaveGame(leave:boolean): boolean;
 
     abstract initRule(data:any):boolean;

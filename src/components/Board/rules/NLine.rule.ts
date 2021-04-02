@@ -17,6 +17,10 @@ export class NLineRule implements Rule{
         this.onClick = this.onClick.bind(this);
     }
 
+    public setIsPlaying(state:boolean){
+        this.isPlaying = state;
+    }
+
     public getIsPlaying():boolean{
         return this.isPlaying;
     }
@@ -31,8 +35,7 @@ export class NLineRule implements Rule{
         return true;
     }
     public leaveGame(leave:boolean): boolean{
-        this.isLeave = leave;
-        this.sendData('leaveGame', this.isLeave)
+        this.socket.close();
         return true;
     }
 
