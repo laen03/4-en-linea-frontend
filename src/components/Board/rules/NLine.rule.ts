@@ -34,8 +34,11 @@ export class NLineRule implements Rule{
         this.sendData('pauseGame', this.isPaused)
         return true;
     }
+
     public leaveGame(leave:boolean): boolean{
-        this.socket.close();
+        this.socket.disconnect();
+        this.isPlaying = false;
+        
         return true;
     }
 
@@ -52,6 +55,7 @@ export class NLineRule implements Rule{
         });
         this.socket.on("finishGameRoom",(response:any) => {
             this.isPlaying = false;
+            console.log("Fin del juego")
             data.onFinish(response)
         });
         this.socket.on('pauseGame', (response:any) => {

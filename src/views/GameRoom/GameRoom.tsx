@@ -43,7 +43,7 @@ export class GameRoom extends Component {
   }
 
   socketConnected = (socket:any) => {
-    this.setState({roomState:RoomState.IDEL});
+    this.setState({roomState:this.state.roomState == RoomState.FINISH? RoomState.FINISH:RoomState.IDEL});
   }
 
   gameRoomInfo(){

@@ -56,7 +56,8 @@ export class GameRoomPC extends Component {
   }
 
   socketConnected = (socket:any) => {
-    this.setState({roomState:RoomState.IDEL});
+    console.log("Conectado")
+    this.setState({roomState:this.state.roomState == RoomState.FINISH? RoomState.FINISH:RoomState.IDEL});
   }
 
   /**
@@ -114,9 +115,9 @@ export class GameRoomPC extends Component {
         <div className="row">
           <div className="col-12 col-md-7">
             <h2 className="text-center">Tablero</h2>
-            {(this.state.roomState != RoomState.IDEL && this.state.roomState != RoomState.PLAYING) ?
+            {(this.state.roomState == RoomState.WAITING) ?
               (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />) :
-              (this.state.roomState == RoomState.PLAYING ?
+              (this.state.roomState == RoomState.PLAYING || this.state.roomState == RoomState.FINISH ?
                 (<Board
                   matchTime={15}
                   gameRule={this.state.gamerule}
@@ -162,21 +163,21 @@ export class GameRoomPC extends Component {
               </div>
               <div className="row mt-2">
                 <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(1)}>
+                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(1)}>
                     Nivel 1
                       </button>
                 </div>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(2)}>
+                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(2)}>
                     Nivel 2
                         </button>
                 </div>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
-                  <button disabled={this.state.roomState != RoomState.IDEL} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(3)}>
+                  <button disabled={!(this.state.roomState == RoomState.IDEL || this.state.roomState == RoomState.FINISH)} className="btn btn-info btn-block" onClick={(e) => this.createGameRoom(3)}>
                     Nivel 3
                         </button>
                 </div>

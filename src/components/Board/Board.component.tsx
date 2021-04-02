@@ -77,8 +77,8 @@ export class Board extends Component<prop> {
         }
         if (data.win == 1) {
             this.setState({ board: data.board });
-        }
-
+        }else
+            this.setState({ time: 'Abandono' });
         // this.forceUpdate();
     }
 
@@ -158,6 +158,7 @@ export class Board extends Component<prop> {
 
     public leaveGame(leave:boolean){
         this.props.gameRule.leaveGame(leave);
+        this.props.player2.win = true;
         this.props.onFinish();
     }
 
