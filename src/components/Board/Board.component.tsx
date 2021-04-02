@@ -6,9 +6,9 @@ import style from './Board.module.css';
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
+import { BottomNavigationAction } from '@material-ui/core';
 
 const crono = require('proyecto-2c-crono');
-var pause = false;
 var arTimer;
 var timer = 15;
 
@@ -31,6 +31,7 @@ interface prop {
     gameRule: Rule,
     matchTime: number,
     onFinish: any
+    bot: boolean
 }
 
 interface state {
@@ -53,7 +54,9 @@ export class Board extends Component<prop> {
         this.props.gameRule.initRule({
             updata: this.update,
             startTimer: this.startTimer,
-            onFinish: this.onFinish
+            onFinish: this.onFinish,
+            time: timer,
+            pause: this.props.gameRule.getIsPaused()
         });
     }
 
@@ -122,36 +125,34 @@ export class Board extends Component<prop> {
      * de mostrarle al jugador cuanto tiempo le queda para mover su ficha 
      */
     public startTimer = (time:number) => {
-        const cont = new crono.Descontador(this.props.matchTime);
-        var d = cont.start().subscribe(
-            (data: string) => {
-                if (pause){
-                    arTimer = data.split(":");
-                    timer = parseInt(arTimer[2]);
-                    d.unsubscribe();
-                }else{
-                    this.startTimer(timer);
-
+        if(!this.props.bot){
+            const cont = new crono.Descontador(time);
+            var d = cont.start().subscribe(
+                (data: string) => {
+                    if (this.props.gameRule.getIsPaused()){
+                        arTimer = data.split(":");
+                        timer = parseInt(arTimer[2]);
+                        d.unsubscribe();
+                    }
+                    if (!this.props.gameRule.getIsPlaying()) {
+                        d.unsubscribe();
+                        this.setState({ timer: '' });
+                        return;
+                    }
+                    if (data === 'FINISH') {
+                        d.unsubscribe();
+                        this.props.gameRule.setIsPlaying(false);
+                        this.setState({ timer: 'Fin' });
+                        return;
+                    }
+                    var seg = data.split(':').pop();
+                    this.setState({ timer: seg });
                 }
-                if (!this.props.gameRule.getIsPlaying()) {
-                    d.unsubscribe();
-                    this.setState({ timer: '' });
-                    return;
-                }
-                if (data === 'FINISH') {
-                    d.unsubscribe();
-                    this.props.gameRule.setIsPlaying(false);
-                    this.setState({ timer: 'Fin' });
-                    return;
-                }
-                var seg = data.split(':').pop();
-                this.setState({ timer: seg });
-            }
-        );
+            );
+        }
     }
 
     public pauseGame(){
-        pause = true;
         this.props.gameRule.pauseGame();
     }
 
@@ -196,7 +197,7 @@ export class Board extends Component<prop> {
                 <div className="row">
                     <div className="col-12">
                         <div className={style.table}>
-                            <div className="bg-white">
+                            <div className="bg-white"> 
                                 {this.state.board.map((row, inde) => {
                                     return (
                                         <div className="d-flex" key={inde}>

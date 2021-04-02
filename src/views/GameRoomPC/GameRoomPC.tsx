@@ -121,6 +121,7 @@ export class GameRoomPC extends Component {
                   matchTime={15}
                   gameRule={this.state.gamerule}
                   board={this.state.board}
+                  bot={true}
                   player2={{
                     id: -1,
                     color: this.state.colorPlayer2,

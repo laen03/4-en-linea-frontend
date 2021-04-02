@@ -45,7 +45,10 @@ export class NLineRule implements Rule{
             console.log(response)
             this.isPlaying = true;
             data.updata(response.x, response.y, response.id);
-            data.startTimer();
+            if(!data.pause){
+                console.log("tiempo")
+                data.startTimer(data.time);
+            }
         });
         this.socket.on("finishGameRoom",(response:any) => {
             this.isPlaying = false;
