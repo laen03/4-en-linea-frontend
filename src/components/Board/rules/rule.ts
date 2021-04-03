@@ -10,7 +10,7 @@ export abstract class Rule {
 
     abstract setIsPlaying(state:boolean):void;
 
-    abstract leaveGame(leave:boolean): boolean;
+    abstract leaveGame(): boolean;
 
     abstract initRule(data:any):boolean;
 

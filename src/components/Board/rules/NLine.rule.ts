@@ -31,14 +31,14 @@ export class NLineRule implements Rule{
 
     public pauseGame(): boolean{
         this.isPaused = !this.isPaused;
-        this.sendData('pauseGame', this.isPaused)
+        this.sendData('pauseGame', this.isPaused);
         return true;
     }
 
-    public leaveGame(leave:boolean): boolean{
-        this.socket.disconnect();
+    public leaveGame(): boolean{
+        this.sendData('leaveGame', true);
         this.isPlaying = false;
-        
+        console.log("desconectadoooooo")
         return true;
     }
 
@@ -54,14 +54,12 @@ export class NLineRule implements Rule{
             }
         });
         this.socket.on("finishGameRoom",(response:any) => {
+            console.log(response)
             this.isPlaying = false;
             console.log("Fin del juego")
             data.onFinish(response)
         });
-        this.socket.on('pauseGame', (response:any) => {
-            this.isPaused = response;
-        });
-        this.socket.on('leaveGame', (response:any) => {
+        this.socket.on('pausedGame', (response:any) => {
             this.isPaused = response;
         });
         return true;
