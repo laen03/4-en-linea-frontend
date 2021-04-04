@@ -7,6 +7,7 @@ import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
 import { BottomNavigationAction } from '@material-ui/core';
+import { RoomState } from 'enums/RoomState';
 
 const crono = require('proyecto-2c-crono');
 var arTimer;
@@ -30,7 +31,8 @@ interface prop {
     },
     gameRule: Rule,
     matchTime: number,
-    onFinish: any
+    onFinish: any,
+    roomState: RoomState,
     bot: boolean
 }
 
@@ -76,7 +78,7 @@ export class Board extends Component<prop> {
         }
         if (data.win == 1) {
             this.setState({ board: data.board });
-        }else
+        } else
             this.setState({ time: 'Abandono' });
         // this.forceUpdate();
     }
@@ -123,12 +125,12 @@ export class Board extends Component<prop> {
      * Esta Funcion se encarga de llevar una cuenta regresiva con el objetivo 
      * de mostrarle al jugador cuanto tiempo le queda para mover su ficha 
      */
-    public startTimer = (time:any) => {
-        if(!this.props.bot){
+    public startTimer = (time: any) => {
+        if (!this.props.bot) {
             const cont = new crono.Descontador(time);
             var d = cont.start().subscribe(
                 (data: string) => {
-                    if (this.props.gameRule.getIsPaused()){
+                    if (this.props.gameRule.getIsPaused()) {
                         arTimer = data.split(":");
                         timer = parseInt(arTimer[2]);
                         d.unsubscribe();
@@ -151,15 +153,15 @@ export class Board extends Component<prop> {
         }
     }
 
-    public pauseGame(){
+    public pauseGame() {
         this.props.gameRule.pauseGame();
-        if(!this.props.gameRule.getIsPaused()){
+        if (!this.props.gameRule.getIsPaused()) {
             console.log("tiempo")
             this.startTimer(this.state.timer);
         }
     }
 
-    public leaveGame(){
+    public leaveGame() {
         this.props.gameRule.leaveGame();
         //this.props.player2.win = true;
         this.props.onFinish();
@@ -201,7 +203,7 @@ export class Board extends Component<prop> {
                 <div className="row">
                     <div className="col-12">
                         <div className={style.table}>
-                            <div className="bg-white"> 
+                            <div className="bg-white">
                                 {this.state.board.map((row, inde) => {
                                     return (
                                         <div className="d-flex" key={inde}>
@@ -221,24 +223,27 @@ export class Board extends Component<prop> {
                                     );
                                 })}
                             </div>
-                        </div>  
+                        </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-1"></div>
-                    <div className="col-5  mt-2 mb-2">
-                        <button className={this.props.gameRule.getIsPaused() ? "btn btn-block btn-success btn-sm": "btn btn-block btn-warning btn-sm"}
-                        onClick={() => this.pauseGame()}>
-                            {this.props.gameRule.getIsPaused() ? 
-                                (<div><PlayArrowIcon/>Reanudar partida</div>):(<div><PauseIcon/>Pausar partida</div>)}
-                        </button>
+                {this.props.roomState == RoomState.FINISH ? ('') : (
+                    <div className="row" >
+                        <div className="col-1"></div>
+                        <div className="col-5  mt-2 mb-2">
+                            <button className={this.props.gameRule.getIsPaused() ? "btn btn-block btn-success btn-sm" : "btn btn-block btn-warning btn-sm"}
+                                onClick={() => this.pauseGame()}>
+                                {this.props.gameRule.getIsPaused() ?
+                                    (<div><PlayArrowIcon />Reanudar partida</div>) : (<div><PauseIcon />Pausar partida</div>)}
+                            </button>
+                        </div>
+                        <div className="col-5 mt-2 mb-2">
+                            <button className="btn btn-block btn-danger btn-sm" onClick={() => this.leaveGame()}>
+                                <CloseIcon /> Abandonar partida
+                         </button>
+                        </div>
                     </div>
-                    <div className="col-5 mt-2 mb-2">
-                        <button className="btn btn-block btn-danger btn-sm" onClick={() => this.leaveGame()}>
-                            <CloseIcon/> Abandonar partida
-                        </button>
-                    </div>
-                </div>
+                )}
+
             </div>
         );
     }

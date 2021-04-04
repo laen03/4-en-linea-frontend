@@ -8,17 +8,12 @@ import style from './GameRoom.module.css';
 import ReactLoading from 'react-loading';
 import Settings from '@material-ui/icons/Settings';
 import { BoardConfigurationDialog } from '../../components/Board/BoardConfiguration.dialog';
+import { RoomState } from 'enums/RoomState';
 
 
 const io = require('socket.io-client');
 const token = AuthService.getAccessToken();
-enum RoomState {
-  IDEL,
-  FINISH,
-  WAITING,
-  DISCONNECTED,
-  PLAYING
-}
+
 export class GameRoom extends Component {
 
   public state: any;
@@ -161,6 +156,7 @@ export class GameRoom extends Component {
               (<ReactLoading type="bubbles" className="m-auto" color="#2395FF" height={'100px'} width={'100px'} />) :
               (this.state.roomState == RoomState.PLAYING || this.state.roomState == RoomState.FINISH ?
                 (<Board
+                  roomState ={this.state.roomState}
                   matchTime={15}
                   gameRule={this.state.gamerule}
                   board={this.state.board}
