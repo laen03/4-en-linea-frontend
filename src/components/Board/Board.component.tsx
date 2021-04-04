@@ -55,8 +55,7 @@ export class Board extends Component<prop> {
             updata: this.update,
             startTimer: this.startTimer,
             onFinish: this.onFinish,
-            time: timer,
-            pause: this.props.gameRule.getIsPaused()
+            time: this.state.timer
         });
     }
 
@@ -124,7 +123,7 @@ export class Board extends Component<prop> {
      * Esta Funcion se encarga de llevar una cuenta regresiva con el objetivo 
      * de mostrarle al jugador cuanto tiempo le queda para mover su ficha 
      */
-    public startTimer = (time:number) => {
+    public startTimer = (time:any) => {
         if(!this.props.bot){
             const cont = new crono.Descontador(time);
             var d = cont.start().subscribe(
@@ -154,6 +153,10 @@ export class Board extends Component<prop> {
 
     public pauseGame(){
         this.props.gameRule.pauseGame();
+        if(!this.props.gameRule.getIsPaused()){
+            console.log("tiempo")
+            this.startTimer(this.state.timer);
+        }
     }
 
     public leaveGame(){
@@ -227,7 +230,7 @@ export class Board extends Component<prop> {
                         <button className={this.props.gameRule.getIsPaused() ? "btn btn-block btn-success btn-sm": "btn btn-block btn-warning btn-sm"}
                         onClick={() => this.pauseGame()}>
                             {this.props.gameRule.getIsPaused() ? 
-                            (<div><PlayArrowIcon/>Reanudar partida</div>):(<div><PauseIcon/>Pausar partida</div>)}
+                                (<div><PlayArrowIcon/>Reanudar partida</div>):(<div><PauseIcon/>Pausar partida</div>)}
                         </button>
                     </div>
                     <div className="col-5 mt-2 mb-2">

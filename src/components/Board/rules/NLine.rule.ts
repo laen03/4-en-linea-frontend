@@ -48,10 +48,7 @@ export class NLineRule implements Rule{
             console.log(response)
             this.isPlaying = true;
             data.updata(response.x, response.y, response.id);
-            if(!data.pause){
-                console.log("tiempo")
-                data.startTimer(data.time);
-            }
+            data.startTimer(15);
         });
         this.socket.on("finishGameRoom",(response:any) => {
             console.log(response)
@@ -60,6 +57,25 @@ export class NLineRule implements Rule{
             data.onFinish(response)
         });
         this.socket.on('pausedGame', (response:any) => {
+            this.isPaused = response;
+            console.log("Socket de pausedGame", response, this.isPaused);
+            if(this.isPaused){
+                alert("¡El contrincante pausó el juego!");
+            }
+
+            if(!this.isPaused){
+                console.log("tiempo")
+                data.startTimer(data.time);
+                
+            }
+            //Aquí debería hacer algo, porque el pauseBtn del jugador que no pausó no se cambia
+            //Por ejemplo deshabilitar el pauseBtn de la persona que no pausó el juego (bootstrap disabled)
+        });
+        this.socket.on('pauseGame', (response:any) => {
+            this.isPaused = response;
+            console.log("pauseGame", response, this.isPaused);
+        });
+        this.socket.on('leaveGame', (response:any) => {
             this.isPaused = response;
         });
         return true;
