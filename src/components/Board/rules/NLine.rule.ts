@@ -38,7 +38,6 @@ export class NLineRule implements Rule{
     public leaveGame(): boolean{
         this.sendData('leaveGame', true);
         this.isPlaying = false;
-        console.log("desconectadoooooo")
         return true;
     }
 
